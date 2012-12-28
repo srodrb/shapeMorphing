@@ -200,7 +200,7 @@ splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (p
      */
     
     n = 8;                     //number of control points. Source adds +1
-    t = 3;                     //degree of polynomial = t-1
+    t = 4;                     //degree of polynomial = t-1
     tnp = 15;
     pts = new point[tnp];      //double -1  cause contains upper and lower surface. One point is duplicated.
 
