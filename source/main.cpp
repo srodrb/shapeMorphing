@@ -39,8 +39,11 @@ int main(int argc, const char *argv[])
     shape.exportCoordinates("airfoilCoordinates.dat");
 
     shape.plot();
-    displacementStruct displacement(315.0,0.08);
-    int pointID = 9;
+    displacementStruct displacement(315.0,0.05);
+    int pointID = 11;
+
+    displacementStruct displacement2(315.0,0.03);
+    shape.modifyControlPoint(10,displacement2);
 
     shape.modifyControlPoint(pointID, displacement);
     shape.plot();
