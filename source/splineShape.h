@@ -199,9 +199,9 @@ splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (p
      *      - Crear los splines a partir de esos puntos de control.
      */
     
-    n = 6;                     //number of control points. Source adds +1
+    n = 8;                     //number of control points. Source adds +1
     t = 3;                     //degree of polynomial = t-1
-    tnp = 2*(n+1)-1;
+    tnp = 15;
     pts = new point[tnp];      //double -1  cause contains upper and lower surface. One point is duplicated.
 
     //Iniciamos el constructor con la spline basica sobre la que luego trabajaremos
@@ -254,23 +254,22 @@ void splineShape::initialSpline()
         pts[3].x = xu[49];     pts[3].y=zu[49];    pts[3].z=0.0;
         pts[4].x = xu[30];     pts[4].y=zu[30];    pts[4].z=0.0;
         pts[5].x = xu[16];      pts[5].y=zu[16];     pts[5].z=0.0;
-        pts[6].x = xu[0];      pts[6].y=zu[0];     pts[6].z=0.0;
+        pts[6].x = xu[3];      pts[6].y=zu[3];     pts[6].z=0.0;
+        pts[7].x = xu[0];      pts[7].y=zu[0];     pts[7].z=0.0;
         
-        pts[7].x = xl[15];      pts[7].y=zl[15];     pts[7].z=0.0;
-        pts[8].x = xl[29];      pts[8].y=zl[29];     pts[8].z=0.0;
-        pts[9].x = xl[49];      pts[9].y=zl[49];     pts[9].z=0.0;
-        pts[10].x = xl[70];      pts[10].y=zl[70];     pts[10].z=0.0;
-        pts[11].x = xl[84];      pts[11].y=zl[84];     pts[11].z=0.0;
-        pts[12].x = xu[Ni-1];      pts[12].y=zu[Ni-1];     pts[12].z=0.0;
+        pts[8].x = xl[3];        pts[8].y=zl[3];       pts[8].z=0.0;
+        pts[9].x = xl[15];       pts[9].y=zl[15];      pts[9].z=0.0;
+        pts[10].x = xl[29];      pts[10].y=zl[29];     pts[10].z=0.0;
+        pts[11].x = xl[49];      pts[11].y=zl[49];     pts[11].z=0.0;
+        pts[12].x = xl[70];      pts[12].y=zl[70];     pts[12].z=0.0;
+        pts[13].x = xl[84];      pts[13].y=zl[84];     pts[13].z=0.0;
+        pts[14].x = xu[Ni-1];    pts[14].y=zu[Ni-1];   pts[14].z=0.0;
 
 
       int resolution = Ni;  //100 - how many points our in our output array
       point *out_pts;
       out_pts = new point[resolution];
 
-      //_______________________________________Condition to adjust trailing edge
-      displacementStruct adjust(180.0,0.015);
-      modifyControlPoint(6,adjust);
 
       bspline(tnp-1, t, pts, out_pts, resolution);
       exportControlPoints();
@@ -291,7 +290,7 @@ void splineShape::calcSplines()
       point *out_pts;
       out_pts = new point[resolution];
 
-      bspline(tnp-1, t, pts, out_pts, resolution);//cambio n por tnp
+      bspline(14, t, pts, out_pts, resolution);//antes era tpn-1
 
       //una vez tengo la salida de los puntos del spline quiero sacar los puntos
       //de control marcados para la curva para ver como se comporta a diferentes 
