@@ -9,44 +9,32 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       polyBoundaryMesh;
-    location    "constant/polyMesh";
-    object      boundary;
+    class       faceSet;
+    location    "constant/polyMesh/sets";
+    object      nonOrthoFaces;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-5
+
+17
 (
-    inlet
-    {
-        type            patch;
-        nFaces          180;
-        startFace       79520;
-    }
-    outlet
-    {
-        type            patch;
-        nFaces          160;
-        startFace       79700;
-    }
-    topAndBottom
-    {
-        type            patch;
-        nFaces          320;
-        startFace       79860;
-    }
-    naca4
-    {
-        type            wall;
-        nFaces          300;
-        startFace       80180;
-    }
-    defaultFaces
-    {
-        type            empty;
-        nFaces          80000;
-        startFace       80480;
-    }
+39856 
+39858 
+39859 
+39860 
+39861 
+39862 
+39863 
+39864 
+39865 
+39866 
+39867 
+39868 
+39869 
+39870 
+39871 
+39872 
+39874 
 )
 
 // ************************************************************************* //
