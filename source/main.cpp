@@ -28,35 +28,29 @@
 
 int main(int argc, const char *argv[])
 {
-    printf("Iniciando el modulo principal\n");
+    printf("Main module... Menu isn't implemented yet!! \n");
+    
     //_______________________________________Airfoil parameters
-    float m = 7.0;
-    float p = 5.0;
+    float m = 0.0;
+    float p = 0.0;
     float t = 12.0;
     float c = 1.0; 
 
     naca4parameters parameters(c,m,p,t,0.0,0.0);
     meshGen naca7512 (parameters);
     splineShape shape(4,parameters);            
-    shape.plot();
-    /*
-    splineShape shape(4,parameters);            
-
-    
-    
-    shape.calcSplines();
-    shape.coordinates();
-    shape.exportCoordinates("airfoilCoordinates.dat");
 
     shape.plot();
     displacementStruct displacement(315.0,0.05);
     int pointID = 11;
     shape.modifyControlPoint(pointID, displacement);
     shape.plot();
+    
+    shape.modifyControlPoint(pointID, displacement);
+    shape.plot();
 
-    //ahora vamos a crear directamente la malla a partir de la clase derivada
-    meshGen naca0012 (parameters);
-    */
+    
+    //int output = system ("cd ../OFcase && blockMesh && checkMesh && paraFoam" );
 
     return 0;
 }

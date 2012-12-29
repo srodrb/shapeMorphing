@@ -61,6 +61,7 @@ class splineShape : public virtual naca4 {
         void calcSplines();
         void modifyControlPoint(int pointID, displacementStruct displacement);
         void exportControlPoints();
+        void exportSplines();
 
         virtual void plot();//declarado como virtual para que el resto de clases tengan que implementarlo
 
@@ -68,16 +69,19 @@ class splineShape : public virtual naca4 {
         int ctrlP;//control points
         point *pts;          // puntero de estructuras punto con el que funcionan las funciones.
         int n,t,tnp;
+        point * out_pts;     //puntero que utilizan las funciones para el calculo de las splines
         /*
          * n; numero de puntos de control
          * t: grado de la b-spline
          */
 
      private:
-        void bspline(int n, int t, point *control, point *output, int num_output);
+        void bspline(int n, int t, point *control, point *output);
         double blend(int k, int t, int *u, double v);
         void compute_intervals(int *u, int n, int t);
         void compute_point(int *u, int n, int t, double v, point *control,point *output);
+        void updateControlPoints();
+        int calcIndex(double value, const char* zone);
     };
 
 splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (parameters)
@@ -90,7 +94,7 @@ splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (p
     n = 8;                     //number of control points. Source adds +1
     t = 4;                     //degree of polynomial = t-1
     tnp = 15;
-    pts = new point[tnp];      //double -1  cause contains upper and lower surface. One point is duplicated.
+    pts = new point[2*n -1];      //double -1  cause contains upper and lower surface. One point is duplicated.
 
     //Iniciamos el constructor con la spline basica sobre la que luego trabajaremos
     initialSpline();
@@ -136,17 +140,17 @@ void splineShape::initialSpline()
 
       //Debido a la distribucion senoidal de los puntos, no se situan donde tenia pensado,
       //tengo que ver como los ajusto...
-        pts[0].x = xu[Ni-1];   pts[0].y=zu[Ni-1];  pts[0].z=0.0;
-        pts[1].x = xu[84];     pts[1].y=zu[84];    pts[1].z=0.0;
-        pts[2].x = xu[70];     pts[2].y=zu[70];    pts[2].z=0.0;
-        pts[3].x = xu[49];     pts[3].y=zu[49];    pts[3].z=0.0;
-        pts[4].x = xu[30];     pts[4].y=zu[30];    pts[4].z=0.0;
-        pts[5].x = xu[16];      pts[5].y=zu[16];     pts[5].z=0.0;
-        pts[6].x = xu[3];      pts[6].y=zu[3];     pts[6].z=0.0;
-        pts[7].x = xu[0];      pts[7].y=zu[0];     pts[7].z=0.0;
+        pts[0].x = xu[Ni-1];     pts[0].y=zu[Ni-1];    pts[0].z=0.0;
+        pts[1].x = xu[84];       pts[1].y=zu[84];      pts[1].z=0.0;
+        pts[2].x = xu[70];       pts[2].y=zu[70];      pts[2].z=0.0;
+        pts[3].x = xu[49];       pts[3].y=zu[49];      pts[3].z=0.0;
+        pts[4].x = xu[30];       pts[4].y=zu[30];      pts[4].z=0.0;
+        pts[5].x = xu[16];       pts[5].y=zu[16];      pts[5].z=0.0;
+        pts[6].x = xu[3];        pts[6].y=zu[3];       pts[6].z=0.0;
+        pts[7].x = xu[0];        pts[7].y=zu[0];       pts[7].z=0.0;
         
-        pts[8].x = xl[3];        pts[8].y=zl[3];       pts[8].z=0.0;
-        pts[9].x = xl[15];       pts[9].y=zl[15];      pts[9].z=0.0;
+        pts[8].x =  xl[3];       pts[8].y=zl[3];       pts[8].z=0.0;
+        pts[9].x =  xl[15];      pts[9].y=zl[15];      pts[9].z=0.0;
         pts[10].x = xl[29];      pts[10].y=zl[29];     pts[10].z=0.0;
         pts[11].x = xl[49];      pts[11].y=zl[49];     pts[11].z=0.0;
         pts[12].x = xl[70];      pts[12].y=zl[70];     pts[12].z=0.0;
@@ -154,13 +158,12 @@ void splineShape::initialSpline()
         pts[14].x = xu[Ni-1];    pts[14].y=zu[Ni-1];   pts[14].z=0.0;
 
 
-      int resolution = Ni;  //100 - how many points our in our output array
-      point *out_pts;
-      out_pts = new point[resolution];
+      out_pts = new point[2*Ni]; //antes teniamos Ni elementos en upper y Ni en lower, ahora debemos tener 2 Ni
 
 
-      bspline(tnp-1, t, pts, out_pts, resolution);
+      bspline(tnp-1, t, pts, out_pts);
       exportControlPoints();
+      updateControlPoints();
 }
 
 void splineShape::calcSplines()
@@ -171,20 +174,15 @@ void splineShape::calcSplines()
      * hacemos alguna variacion sobre los puntos de control ya calculados
      */
 
-      int *u;
-      int i;
-      
-      int resolution = Ni;  //100 - how many points our in our output array
-      point *out_pts;
-      out_pts = new point[resolution];
-
-      bspline(14, t, pts, out_pts, resolution);//antes era tpn-1
+       int *u;
+       bspline(14, t, pts, out_pts);//antes era tpn-1
 
       //una vez tengo la salida de los puntos del spline quiero sacar los puntos
       //de control marcados para la curva para ver como se comporta a diferentes 
       //grados del polinomio.
 
       exportControlPoints();
+      updateControlPoints();
 }
 
 
@@ -218,7 +216,43 @@ void splineShape::modifyControlPoint(int pointID, displacementStruct displacemen
     pts[pointID].y += ydisplacement;
     
    calcSplines();
+   updateControlPoints();
 }
+
+void splineShape::updateControlPoints()
+{
+    /*
+     * El metodo actualiza los puntos de control para poder efectuar modificaciones
+     * sobre ellos en la siguiente iteracion.
+     *
+     * Tengo que calcular los puntos en base a la cuerda porque se desplazan en 
+     * sucesivas iteraciones... vamos con ello.
+     *
+     * Ayudaria tambien hacer una distribucion lineal de los puntos, pero eso solo 
+     * importa para la primera aproximacion y esa funciona bastante bien, asi que
+     * no es tan importante
+     */
+
+
+    printf("Vamos a calcular el valor del indice que corresponde al 0.8 de la cuerda:\n");
+    printf("El valor es: %i\n",calcIndex(0.8,"upper"));
+        pts[0].x = out_pts[0].x;                     pts[0].y=out_pts[0].y;       pts[0].z=0.0;
+        pts[1].x = out_pts[calcIndex(0.95,"upper")].x;       pts[1].y=out_pts[calcIndex(0.95,"upper")].y;      pts[1].z=0.0;
+        pts[2].x = out_pts[calcIndex(0.80,"upper")].x;       pts[2].y=out_pts[calcIndex(0.80,"upper")].y;      pts[2].z=0.0;
+        pts[3].x = out_pts[calcIndex(0.50,"upper")].x;       pts[3].y=out_pts[calcIndex(0.50,"upper")].y;      pts[3].z=0.0;
+        pts[4].x = out_pts[calcIndex(0.20,"upper")].x;       pts[4].y=out_pts[calcIndex(0.20,"upper")].y;      pts[4].z=0.0;
+        pts[5].x = out_pts[calcIndex(0.05,"upper")].x;       pts[5].y=out_pts[calcIndex(0.05,"upper")].y;      pts[5].z=0.0;
+        pts[6].x = out_pts[calcIndex(0.01,"upper")].x;       pts[6].y=out_pts[calcIndex(0.01,"upper")].y;      pts[6].z=0.0;
+        pts[7].x = 0.0;                pts[7].y=0.0;                pts[7].z=0.0;
+        
+        pts[8].x =  out_pts[calcIndex(0.01,"lower")].x;      pts[8 ].y=out_pts[calcIndex(0.01,"lower")].y;       pts[8].z=0.0;
+        pts[9].x =  out_pts[calcIndex(0.05,"lower")].x;      pts[9 ].y=out_pts[calcIndex(0.05,"lower")].y;      pts[9].z=0.0;
+        pts[10].x = out_pts[calcIndex(0.20,"lower")].x;      pts[10].y=out_pts[calcIndex(0.20,"lower")].y;     pts[10].z=0.0;
+        pts[11].x = out_pts[calcIndex(0.50,"lower")].x;      pts[11].y=out_pts[calcIndex(0.50,"lower")].y;     pts[11].z=0.0;
+        pts[12].x = out_pts[calcIndex(0.80,"lower")].x;      pts[12].y=out_pts[calcIndex(0.80,"lower")].y;     pts[12].z=0.0;
+        pts[13].x = out_pts[calcIndex(0.95,"lower")].x;      pts[13].y=out_pts[calcIndex(0.95,"lower")].y;     pts[13].z=0.0;
+}
+
 
 void splineShape::exportControlPoints()
 {
@@ -226,6 +260,17 @@ void splineShape::exportControlPoints()
     out = fopen("controlPoints.dat", "w");
     for (int i = 0; i < tnp; i++) {
           fprintf(out, "%f\t%f\t%d\n", pts[i].x,pts[i].y,i); 
+    }
+    fclose(out);
+    printf("Exported control points file.\n");
+}
+
+void splineShape::exportSplines()
+{
+    FILE *out;
+    out = fopen("airfoilCoordinates.dat", "w");
+    for (int i = 0; i < 2*Ni-1; i++) {
+          fprintf(out, "%f\t%f\t%d\n", out_pts[i].x,out_pts[i].y,i); 
     }
     fclose(out);
     printf("Exported control points file.\n");
@@ -239,7 +284,7 @@ void splineShape::plot()
 
 //================= METODOS PARA EL CALCULO DE LAS BSPLINES ======================//
 
-void splineShape::bspline(int n, int t, point *control, point *output, int num_output)
+void splineShape::bspline(int n, int t, point *control, point *output)
 {
 
         /*********************************************************************
@@ -266,10 +311,10 @@ void splineShape::bspline(int n, int t, point *control, point *output, int num_o
       u=new int[n+t+1];
       compute_intervals(u, n, t);
 
-      increment=(double) (n-t+2)/(num_output-1);  // how much parameter goes up each time
+      increment=(double) (n-t+2)/(2*Ni-1);  // how much parameter goes up each time
       interval=0;
 
-      for (output_index=0; output_index<num_output-1; output_index++)
+      for (output_index=0; output_index<2*Ni-1; output_index++)
       {
         compute_point(u, n, t, interval, control, &calcxyz);
         output[output_index].x = calcxyz.x;
@@ -277,15 +322,15 @@ void splineShape::bspline(int n, int t, point *control, point *output, int num_o
         output[output_index].z = calcxyz.z;
         interval=interval+increment;  // increment our parameter
       }
-      output[num_output-1].x=control[n].x;   // put in the last point
-      output[num_output-1].y=control[n].y;
-      output[num_output-1].z=control[n].z;
+      output[2*Ni-1].x=control[n].x;   // put in the last point
+      output[2*Ni-1].y=control[n].y;
+      output[2*Ni-1].z=control[n].z;
 
       //ahora que tenemos los calculos hechos quiero generar un fichero de salida
       //para Gnuplot para poder ver los resultados.
       FILE *out;
       out = fopen("splinePoints.dat","w");
-      for (int i = 0; i < num_output; i++) {
+      for (int i = 0; i < 2*Ni; i++) {
           fprintf(out, "%f\t%f\t%f\n", output[i].x,output[i].y,output[i].z);
           printf("Coordenadas: %f\t%f\t%d\n", output[i].x,output[i].y,i,n);
       }
@@ -345,7 +390,7 @@ void splineShape::compute_point(int *u, int n, int t, double v, point *control,p
   double temp;
 
   // initialize the variables that will hold our outputted point
-  output->x=0;
+output->x=0;
   output->y=0;
   output->z=0;
 
@@ -356,5 +401,37 @@ void splineShape::compute_point(int *u, int n, int t, double v, point *control,p
     output->y = output->y + (control[k]).y * temp;
     output->z = output->z + (control[k]).z * temp;
   }
+}
+
+int splineShape::calcIndex(double value, const char* zone)
+{
+    /*
+     * Si se tienen dudas sobre su funcionamiento es de gran ayuda
+     * imprimir por pantalla los valores de las coordenadas de las 
+     * splines para ver su ordenamiento.
+     */
+    if(zone == "upper")
+    {
+        for (int i = 0; i < 2*Ni-1; i++) {
+            if (out_pts[i].x >= value and out_pts[i+1].x < value)
+            {
+                printf("Lo tenemos, es: %d\n", i);
+                return i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        printf("Estamos en lower\n");
+        for (int i = 0; i < 2*Ni-1; i++) {
+            if(out_pts[i].x <= value and out_pts[i+1].x > value)
+            {
+                printf("Lo tenemos (para lower surface, es: %d\n", i);
+                return i+1; //sumamos uno porque vamos con retraso...
+                break;
+            }
+        }
+    }
 }
 #endif

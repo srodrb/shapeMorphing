@@ -1,0 +1,11 @@
+
+
+ CMESHFOIL AT WORK...
+
+    What about some testing? :)
+
+    OFcase is a test OpenFOAM case dir, it only has a case skeleton.
+    OFcase/constant/polyMesh is aumatically removed by CMeshFoil, and a new blockMeshDict will be created there.
+    CMeshFoil runs "blockMesh" and "checkMesh", if everything is OK it goes with paraFoam!
+
+    NACA 0012, easy...

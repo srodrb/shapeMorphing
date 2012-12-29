@@ -7,10 +7,12 @@
 AIRFOIL_H_	airfoil.h	6;"	d
 AOA	airfoil.h	/^void airfoil::AOA(float angle)$/;"	f	class:airfoil
 COMMON_H_	common.h	6;"	d
+CreateCoordinates	naca4.h	/^void naca4::CreateCoordinates()$/;"	f	class:naca4
+DATA_H_	data.h	2;"	d
 MESHGEN_H_	meshGen.h	4;"	d
 NACA4_H_	naca4.h	6;"	d
 Ni	airfoil.h	/^   unsigned int Ni;$/;"	m	class:airfoil
-Ni	naca4.h	/^   unsigned int Ni;$/;"	m	class:naca4
+Ni	data.h	/^        int Ni;                      \/\/numero de puntos del perfil$/;"	m	class:data
 PARAMETERSTRUCTS_H_	parameterStructs.h	3;"	d
 SPLINESHAPE_H_	splineShape.h	3;"	d
 a	meshGen.h	/^        int a;$/;"	m	class:meshGen
@@ -20,22 +22,25 @@ alpha	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
 alpha	naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
 angle	parameterStructs.h	/^    float angle; \/\/angle of attack$/;"	m	struct:naca4parameters
 bl_thickness	parameterStructs.h	/^    float bl_thickness;\/\/boundary layer thickness$/;"	m	struct:naca4parameters
-blend	splineShape.h	/^double blend(int k, int t, int *u, double v)  \/\/ calculate the blending value$/;"	f
-bspline	splineShape.h	/^void bspline(int n, int t, point *control, point *output, int num_output){$/;"	f
+blend	splineShape.h	/^double splineShape::blend(int k, int t, int *u, double v)  \/\/ calculate the blending value$/;"	f	class:splineShape
+bspline	splineShape.h	/^void splineShape::bspline(int n, int t, point *control, point *output)$/;"	f	class:splineShape
 c	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
 c	naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
 c	parameterStructs.h	/^    float c;$/;"	m	struct:naca4parameters
+calcIndex	splineShape.h	/^int splineShape::calcIndex(double value)$/;"	f	class:splineShape
 calcSplines	splineShape.h	/^void splineShape::calcSplines()$/;"	f	class:splineShape
-compute_intervals	splineShape.h	/^void compute_intervals(int *u, int n, int t)   \/\/ figure out the knots$/;"	f
-compute_point	splineShape.h	/^void compute_point(int *u, int n, int t, double v, point *control,$/;"	f
+compute_intervals	splineShape.h	/^void splineShape::compute_intervals(int *u, int n, int t)   \/\/ figure out the knots$/;"	f	class:splineShape
+compute_point	splineShape.h	/^void splineShape::compute_point(int *u, int n, int t, double v, point *control,point *output)$/;"	f	class:splineShape
 coordinates	airfoil.h	/^void airfoil::coordinates()$/;"	f	class:airfoil
-coordinates	naca4.h	/^void naca4::coordinates()$/;"	f	class:naca4
 ctrlP	splineShape.h	/^        int ctrlP;\/\/control points$/;"	m	class:splineShape
+data	data.h	/^class data {$/;"	c
+data	data.h	/^data::data()$/;"	f	class:data
 displacementStruct	splineShape.h	/^displacementStruct::displacementStruct(double angle, double distance)$/;"	f	class:displacementStruct
 displacementStruct	splineShape.h	/^struct displacementStruct{$/;"	s
 exportControlPoints	splineShape.h	/^void splineShape::exportControlPoints()$/;"	f	class:splineShape
 exportCoordinates	airfoil.h	/^void airfoil::exportCoordinates(const char* filename)$/;"	f	class:airfoil
 exportCoordinates	naca4.h	/^void naca4::exportCoordinates(const char* filename)$/;"	f	class:naca4
+exportSplines	splineShape.h	/^void splineShape::exportSplines()$/;"	f	class:splineShape
 generateBlockMeshDict	meshGen.h	/^void meshGen::generateBlockMeshDict()$/;"	f	class:meshGen
 info	airfoil.h	/^void airfoil::info()$/;"	f	class:airfoil
 initialSpline	splineShape.h	/^void splineShape::initialSpline()$/;"	f	class:splineShape
@@ -52,14 +57,15 @@ meshGen	naca4.h	/^void naca4::meshGen()$/;"	f	class:naca4
 meshGen2	naca4.h	/^void naca4::meshGen2()$/;"	f	class:naca4
 modifyControlPoint	splineShape.h	/^void splineShape::modifyControlPoint(int pointID, displacementStruct displacement)$/;"	f	class:splineShape
 n	splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
-naca4	naca4.h	/^class naca4 {$/;"	c
-naca4	naca4.h	/^naca4::naca4 (naca4parameters parameters)$/;"	f	class:naca4
-naca4	naca4.h	/^naca4::naca4(float chord,float M, float P, float T, float angle)$/;"	f	class:naca4
+naca4	naca4.h	/^class naca4 : public data{$/;"	c
+naca4	naca4.h	/^naca4::naca4 (naca4parameters parameters) : data()$/;"	f	class:naca4
+naca4	naca4.h	/^naca4::naca4(float chord,float M, float P, float T, float angle) : data()$/;"	f	class:naca4
 naca4parameters	parameterStructs.h	/^naca4parameters::naca4parameters(float C, float M, float P, float T, float AOA, float BL_THICKNESS)$/;"	f	class:naca4parameters
 naca4parameters	parameterStructs.h	/^struct naca4parameters{$/;"	s
 norm	splineShape.h	/^    double norm;  \/\/modulo del vector.$/;"	m	struct:displacementStruct
 outPlot	airfoil.h	/^void airfoil::outPlot()$/;"	f	class:airfoil
 outPlot	naca4.h	/^void naca4::outPlot()$/;"	f	class:naca4
+out_pts	splineShape.h	/^        point * out_pts;     \/\/puntero que utilizan las funciones para el calculo de las splines$/;"	m	class:splineShape
 p	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
 p	naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
 p	parameterStructs.h	/^    float p;$/;"	m	struct:naca4parameters
@@ -83,18 +89,20 @@ t	parameterStructs.h	/^    float t;$/;"	m	struct:naca4parameters
 t	splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
 theta	splineShape.h	/^    double theta; \/\/angulo de desplazamiento$/;"	m	struct:displacementStruct
 tnp	splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
+updateControlPoints	splineShape.h	/^void splineShape::updateControlPoints()$/;"	f	class:splineShape
 x	splineShape.h	/^  double x;$/;"	m	struct:point
 xl	airfoil.h	/^   double *xl;$/;"	m	class:airfoil
-xl	naca4.h	/^   double *xl;$/;"	m	class:naca4
+xl	data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
 xu	airfoil.h	/^   double *xu;$/;"	m	class:airfoil
-xu	naca4.h	/^   double *xu;$/;"	m	class:naca4
+xu	data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
 y	splineShape.h	/^  double y;$/;"	m	struct:point
 z	splineShape.h	/^  double z;$/;"	m	struct:point
 zl	airfoil.h	/^   double *zl;$/;"	m	class:airfoil
-zl	naca4.h	/^   double *zl;$/;"	m	class:naca4
+zl	data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
 zu	airfoil.h	/^   double *zu;$/;"	m	class:airfoil
-zu	naca4.h	/^   double *zu;$/;"	m	class:naca4
+zu	data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
 ~airfoil	airfoil.h	/^    ~airfoil () {};$/;"	f	class:airfoil
+~data	data.h	/^        ~data(){};$/;"	f	class:data
 ~meshGen	meshGen.h	/^        ~meshGen(){};$/;"	f	class:meshGen
 ~naca4	naca4.h	/^    ~naca4 () {};$/;"	f	class:naca4
 ~splineShape	splineShape.h	/^        ~splineShape(){};$/;"	f	class:splineShape

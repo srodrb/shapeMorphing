@@ -1,0 +1,20 @@
+
+
+  
+ 
+ 
+ 
+ I would like to introduce you CMeshFoil utility!
+  
+  
+  Basic capabilities: 
+    - Can generate structured meshes for NACA 4,5 and 6 series (at the moment) for OpenFOAM software in ONE CLICK!
+    - Fast setup OpenFOAM case avaliable! 
+      (after some options you can get OpenFOAM running over your foil without codding, copy directories, etc..)
+    - Plots residuals and forces over the airfoil.
+
+  Further capabilities:
+    - Foil Shape manipulation; you can easily transform your foil and test it through some control points. Very fun. 
+    - Optimization: CMeshFoil transform (I'm working on this...)
+
+  

@@ -56,7 +56,8 @@ naca4::naca4 (naca4parameters parameters) : data()
     t       = 0.01* parameters.t;
     c       = parameters.c;
     alpha   = (parameters.angle*pi)/180.0;
-    q       = ceil(0.2*Ni)-1;
+    //q       = ceil(0.2*Ni)-1;
+    q = Ni -5;//quiero hacerlo bastante cercano al borde de salida.
 
     printf("Airfoil info: m = %f, p = %f, t = %f, c=%f\n", m,p,t,c);
     CreateCoordinates();
