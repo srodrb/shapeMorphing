@@ -47,9 +47,9 @@ void meshGen::generateBlockMeshDict()
     const float W = 0.5;
     const float D = 16.0;
     //____Mesh density control parameters______//
-    const int Nx = 100;
+    const int Nx = 150;
     const int ND = 100;
-    const int NT = 20;
+    const int NT = 80;
     const int NW = 1;
     //____Mesh expansion ratios________________//
     const float ExpT = 5;
@@ -62,9 +62,9 @@ void meshGen::generateBlockMeshDict()
     float NoseX =  (-H+xu[q])*cos(alpha); //cout << "NoseX value: " << NoseX << endl;
     float NoseZ = -(-H+xu[q])*sin(alpha); //cout << "NoseZ value: " << NoseZ << endl;
     
-    int Nleading  = ceil(0.3*Nx);
+    int Nleading  = 90; //ceil(0.95*Nx);//TODO alterado, era 0.3*Nx
     int Ntrailing = Nx-Nleading;
-
+    q = Nleading;
     //calculamos los vertices que definen la geometria de la malla
     float vertices[24][3];
 
