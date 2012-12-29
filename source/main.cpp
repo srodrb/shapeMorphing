@@ -17,23 +17,33 @@
  */
 
 #include "common.h"
+#include "data.h"
+
+#include "meshGen.h"
+
 #include "splineShape.h"
 #include "parameterStructs.h"
+#include "naca4.h"
 
 
 int main(int argc, const char *argv[])
 {
     printf("Iniciando el modulo principal\n");
-    //creamos la clase perfil e iniciamos los metodos asociados
-    float m = 7.0;
-    float p = 5.0;
+    //_______________________________________Airfoil parameters
+    float m = 0.0;
+    float p = 0.0;
     float t = 12.0;
-    float c = 1.0; //cuerda del perfil
+    float c = 1.0; 
 
-    naca4parameters parameters(c,m,p,t,0.0,0.0);//esta es la estructura que trabaja con los perfiles naca 4 series.
-    splineShape shape(4,parameters);            //podemos trabajar mas comodamente de esta forma.
+    naca4parameters parameters(c,m,p,t,0.0,0.0);
+    //meshGen naca7512 (parameters);
+    splineShape shape(4,parameters);            
+    shape.plot();
+    /*
+    splineShape shape(4,parameters);            
+
     
-    shape.meshGen();//los metodos tambien funcionan desde la herencia de este modo
+    
     shape.calcSplines();
     shape.coordinates();
     shape.exportCoordinates("airfoilCoordinates.dat");
@@ -41,12 +51,12 @@ int main(int argc, const char *argv[])
     shape.plot();
     displacementStruct displacement(315.0,0.05);
     int pointID = 11;
-
-    displacementStruct displacement2(315.0,0.03);
-    shape.modifyControlPoint(10,displacement2);
-
     shape.modifyControlPoint(pointID, displacement);
     shape.plot();
+
+    //ahora vamos a crear directamente la malla a partir de la clase derivada
+    meshGen naca0012 (parameters);
+    */
 
     return 0;
 }

@@ -13,6 +13,7 @@ Ni	airfoil.h	/^   unsigned int Ni;$/;"	m	class:airfoil
 Ni	naca4.h	/^   unsigned int Ni;$/;"	m	class:naca4
 PARAMETERSTRUCTS_H_	parameterStructs.h	3;"	d
 SPLINESHAPE_H_	splineShape.h	3;"	d
+a	meshGen.h	/^        int a;$/;"	m	class:meshGen
 airfoil	airfoil.h	/^airfoil::airfoil(float chord,float M, float P, float T,int nodes)$/;"	f	class:airfoil
 airfoil	airfoil.h	/^class airfoil {$/;"	c
 alpha	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
@@ -30,10 +31,12 @@ compute_point	splineShape.h	/^void compute_point(int *u, int n, int t, double v,
 coordinates	airfoil.h	/^void airfoil::coordinates()$/;"	f	class:airfoil
 coordinates	naca4.h	/^void naca4::coordinates()$/;"	f	class:naca4
 ctrlP	splineShape.h	/^        int ctrlP;\/\/control points$/;"	m	class:splineShape
+displacementStruct	splineShape.h	/^displacementStruct::displacementStruct(double angle, double distance)$/;"	f	class:displacementStruct
 displacementStruct	splineShape.h	/^struct displacementStruct{$/;"	s
 exportControlPoints	splineShape.h	/^void splineShape::exportControlPoints()$/;"	f	class:splineShape
 exportCoordinates	airfoil.h	/^void airfoil::exportCoordinates(const char* filename)$/;"	f	class:airfoil
 exportCoordinates	naca4.h	/^void naca4::exportCoordinates(const char* filename)$/;"	f	class:naca4
+generateBlockMeshDict	meshGen.h	/^void meshGen::generateBlockMeshDict()$/;"	f	class:meshGen
 info	airfoil.h	/^void airfoil::info()$/;"	f	class:airfoil
 initialSpline	splineShape.h	/^void splineShape::initialSpline()$/;"	f	class:splineShape
 m	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
@@ -43,6 +46,8 @@ main	Cmesh.cpp	/^int main(int argc, char *argv[])$/;"	f
 main	main.cpp	/^int main(int argc, const char *argv[])$/;"	f
 menu	common.h	/^int menu()$/;"	f
 meshGen	airfoil.h	/^void airfoil::meshGen()$/;"	f	class:airfoil
+meshGen	meshGen.h	/^class meshGen : public naca4 {$/;"	c
+meshGen	meshGen.h	/^meshGen::meshGen(naca4parameters parameters): naca4(parameters)$/;"	f	class:meshGen
 meshGen	naca4.h	/^void naca4::meshGen()$/;"	f	class:naca4
 meshGen2	naca4.h	/^void naca4::meshGen2()$/;"	f	class:naca4
 modifyControlPoint	splineShape.h	/^void splineShape::modifyControlPoint(int pointID, displacementStruct displacement)$/;"	f	class:splineShape
@@ -68,7 +73,6 @@ program_name	Cmesh.cpp	/^const char* program_name;$/;"	v
 pts	splineShape.h	/^        point *pts;          \/\/ puntero de estructuras punto con el que funcionan las funciones.$/;"	m	class:splineShape
 q	airfoil.h	/^   int q;$/;"	m	class:airfoil
 q	naca4.h	/^   int q;$/;"	m	class:naca4
-run	splineShape.h	/^int run()$/;"	f
 scale	airfoil.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:airfoil
 scale	naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
 splineShape	splineShape.h	/^class splineShape : public virtual naca4 {$/;"	c
@@ -91,5 +95,6 @@ zl	naca4.h	/^   double *zl;$/;"	m	class:naca4
 zu	airfoil.h	/^   double *zu;$/;"	m	class:airfoil
 zu	naca4.h	/^   double *zu;$/;"	m	class:naca4
 ~airfoil	airfoil.h	/^    ~airfoil () {};$/;"	f	class:airfoil
+~meshGen	meshGen.h	/^        ~meshGen(){};$/;"	f	class:meshGen
 ~naca4	naca4.h	/^    ~naca4 () {};$/;"	f	class:naca4
 ~splineShape	splineShape.h	/^        ~splineShape(){};$/;"	f	class:splineShape

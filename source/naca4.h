@@ -6,10 +6,12 @@
 #define NACA4_H_
 
 #include "common.h"
+#include "data.h"
+
 #include "parameterStructs.h"
 
 
-class naca4 {
+class naca4 : public data{
 public:
     naca4 (float chord,float M, float P, float T, float angle);
     //necesito un constructor que funcione a partir de una estructura
@@ -17,7 +19,7 @@ public:
     ~naca4 () {};
 
     //__________Metodos de la clase____________//
-    void coordinates();
+    void CreateCoordinates();
     void meshGen();
     void meshGen2();
     void outPlot();
@@ -30,53 +32,38 @@ protected:
     * Parametros de entrada:
     *   q = punto de separacion entre el borde de salida y de entrada
     */
-   unsigned int Ni;
    static const float pi = 3.1416;
-   //_________vectores para las coordenadas___//
-   double *xu;
-   double *xl;
-   double *zu;
-   double *zl;
 };
 
 
-naca4::naca4(float chord,float M, float P, float T, float angle)
+naca4::naca4(float chord,float M, float P, float T, float angle) : data()
 {
-    m = 0.01*M;
-    p = 0.1*P;
-    t = 0.01*T;
-    alpha = (angle*pi)/180.0;
-    //Ni = nodes;
-    Ni = 100;
-    c = chord;
-    q = ceil(0.2*Ni)-1;
+    m       = 0.01*M;
+    p       = 0.10*P;
+    t       = 0.01*T;
+    alpha   = (angle*pi)/180.0;
+    c       = chord;
+    q       = ceil(0.2*Ni)-1;
 
     //genero directamente aqui las coordenadas del perfil
-    coordinates();
+    CreateCoordinates();
 }
 
-naca4::naca4 (naca4parameters parameters)
+naca4::naca4 (naca4parameters parameters) : data()
 {
-    m = 0.01* parameters.m;
-    p =  0.1* parameters.p;
-    t = 0.01* parameters.t;
-    c = parameters.c;
-    alpha = (parameters.angle*pi)/180.0;
-    //TODO aun podemos pasar mas parametros por la estructura, pero por el momento es suficiente
+    m       = 0.01* parameters.m;
+    p       =  0.1* parameters.p;
+    t       = 0.01* parameters.t;
+    c       = parameters.c;
+    alpha   = (parameters.angle*pi)/180.0;
+    q       = ceil(0.2*Ni)-1;
 
     printf("Airfoil info: m = %f, p = %f, t = %f, c=%f\n", m,p,t,c);
-    Ni = 100;
-    q = ceil(0.2*Ni)-1;
-    coordinates();
+    CreateCoordinates();
 }
 
-void naca4::coordinates()
+void naca4::CreateCoordinates()
 {
-    //reservamos memoria para los arrays de upper y lower
-    xu = (double*)malloc(Ni*sizeof(double));
-    xl = (double*)malloc(Ni*sizeof(double));
-    zu = (double*)malloc(Ni*sizeof(double));
-    zl = (double*)malloc(Ni*sizeof(double));
 
     //calculate x as a linspace distribution
     double x[Ni];

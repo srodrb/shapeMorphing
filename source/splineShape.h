@@ -40,125 +40,6 @@ displacementStruct::displacementStruct(double angle, double distance)
     norm  = distance;
 }
 
-double blend(int k, int t, int *u, double v)  // calculate the blending value
-{
-  double value;
-
-  if (t==1)         // base case for the recursion
-  {
-    if ((u[k]<=v) && (v<u[k+1]))
-      value=1;
-    else
-      value=0;
-  }
-  else
-  {
-    if ((u[k+t-1]==u[k]) && (u[k+t]==u[k+1]))  // check for divide by zero
-      value = 0;
-    else
-    if (u[k+t-1]==u[k]) // if a term's denominator is zero,use just the other
-      value = (u[k+t] - v) / (u[k+t] - u[k+1]) * blend(k+1, t-1, u, v);
-    else
-    if (u[k+t]==u[k+1])
-      value = (v - u[k]) / (u[k+t-1] - u[k]) * blend(k, t-1, u, v);
-    else
-      value = (v - u[k]) / (u[k+t-1] - u[k]) * blend(k, t-1, u, v) +
-          (u[k+t] - v) / (u[k+t] - u[k+1]) * blend(k+1, t-1, u, v);
-  }
-  return value;
-}
-
-void compute_intervals(int *u, int n, int t)   // figure out the knots
-{
-  int j;
-
-  for (j=0; j<=n+t; j++)
-  {
-    if (j<t)
-      u[j]=0;
-    else
-    if ((t<=j) && (j<=n))
-      u[j]=j-t+1;
-    else
-    if (j>n)
-      u[j]=n-t+2;  // if n-t=-2 then we're screwed, everything goes to 0
-  }
-}
-
-void compute_point(int *u, int n, int t, double v, point *control,
-            point *output)
-{
-  int k;
-  double temp;
-
-  // initialize the variables that will hold our outputted point
-  output->x=0;
-  output->y=0;
-  output->z=0;
-
-  for (k=0; k<=n; k++)
-  {
-    temp = blend(k,t,u,v);  // same blend is used for each dimension coordinate
-    output->x = output->x + (control[k]).x * temp;
-    output->y = output->y + (control[k]).y * temp;
-    output->z = output->z + (control[k]).z * temp;
-  }
-}
-
-void bspline(int n, int t, point *control, point *output, int num_output){
-
-        /*********************************************************************
-
-        Parameters:
-          n          - the number of control points minus 1
-          t          - the degree of the polynomial plus 1
-          control    - control point array made up of point stucture
-          output     - array in which the calculate spline points are to be put
-          num_output - how many points on the spline are to be calculated
-
-        Pre-conditions:
-          n+2>t  (no curve results if n+2<=t)
-          control array contains the number of points specified by n
-          output array is the proper size to hold num_output point structures
-
-
-        **********************************************************************/
-      int *u;                         //puntero que almacena posteriormente en un vector los puntos
-      double increment,interval;
-      point calcxyz;                    //estructura punto, xyz
-      int output_index;
-
-      u=new int[n+t+1];
-      compute_intervals(u, n, t);
-
-      increment=(double) (n-t+2)/(num_output-1);  // how much parameter goes up each time
-      interval=0;
-
-      for (output_index=0; output_index<num_output-1; output_index++)
-      {
-        compute_point(u, n, t, interval, control, &calcxyz);
-        output[output_index].x = calcxyz.x;
-        output[output_index].y = calcxyz.y;
-        output[output_index].z = calcxyz.z;
-        interval=interval+increment;  // increment our parameter
-      }
-      output[num_output-1].x=control[n].x;   // put in the last point
-      output[num_output-1].y=control[n].y;
-      output[num_output-1].z=control[n].z;
-
-      //ahora que tenemos los calculos hechos quiero generar un fichero de salida
-      //para Gnuplot para poder ver los resultados.
-      FILE *out;
-      out = fopen("splinePoints.dat","w");
-      for (int i = 0; i < num_output; i++) {
-          fprintf(out, "%f\t%f\t%f\n", output[i].x,output[i].y,output[i].z);
-      }
-      fclose(out);
-
-      delete u;
-    }
-
-
 
 
 class splineShape : public virtual naca4 {
@@ -180,6 +61,7 @@ class splineShape : public virtual naca4 {
         void calcSplines();
         void modifyControlPoint(int pointID, displacementStruct displacement);
         void exportControlPoints();
+
         virtual void plot();//declarado como virtual para que el resto de clases tengan que implementarlo
 
     protected:
@@ -190,6 +72,12 @@ class splineShape : public virtual naca4 {
          * n; numero de puntos de control
          * t: grado de la b-spline
          */
+
+     private:
+        void bspline(int n, int t, point *control, point *output, int num_output);
+        double blend(int k, int t, int *u, double v);
+        void compute_intervals(int *u, int n, int t);
+        void compute_point(int *u, int n, int t, double v, point *control,point *output);
     };
 
 splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (parameters)
@@ -348,4 +236,125 @@ void splineShape::plot()
     int output = system ("gnuplot -persist plotSpline.gp");
 }
 
+
+//================= METODOS PARA EL CALCULO DE LAS BSPLINES ======================//
+
+void splineShape::bspline(int n, int t, point *control, point *output, int num_output)
+{
+
+        /*********************************************************************
+
+        Parameters:
+          n          - the number of control points minus 1
+          t          - the degree of the polynomial plus 1
+          control    - control point array made up of point stucture
+          output     - array in which the calculate spline points are to be put
+          num_output - how many points on the spline are to be calculated
+
+        Pre-conditions:
+          n+2>t  (no curve results if n+2<=t)
+          control array contains the number of points specified by n
+          output array is the proper size to hold num_output point structures
+
+
+        **********************************************************************/
+      int *u;                         //puntero que almacena posteriormente en un vector los puntos
+      double increment,interval;
+      point calcxyz;                    //estructura punto, xyz
+      int output_index;
+
+      u=new int[n+t+1];
+      compute_intervals(u, n, t);
+
+      increment=(double) (n-t+2)/(num_output-1);  // how much parameter goes up each time
+      interval=0;
+
+      for (output_index=0; output_index<num_output-1; output_index++)
+      {
+        compute_point(u, n, t, interval, control, &calcxyz);
+        output[output_index].x = calcxyz.x;
+        output[output_index].y = calcxyz.y;
+        output[output_index].z = calcxyz.z;
+        interval=interval+increment;  // increment our parameter
+      }
+      output[num_output-1].x=control[n].x;   // put in the last point
+      output[num_output-1].y=control[n].y;
+      output[num_output-1].z=control[n].z;
+
+      //ahora que tenemos los calculos hechos quiero generar un fichero de salida
+      //para Gnuplot para poder ver los resultados.
+      FILE *out;
+      out = fopen("splinePoints.dat","w");
+      for (int i = 0; i < num_output; i++) {
+          fprintf(out, "%f\t%f\t%f\n", output[i].x,output[i].y,output[i].z);
+          printf("Coordenadas: %f\t%f\t%d\n", output[i].x,output[i].y,i,n);
+      }
+      fclose(out);
+
+      delete u;
+}
+
+double splineShape::blend(int k, int t, int *u, double v)  // calculate the blending value
+{
+  double value;
+
+  if (t==1)         // base case for the recursion
+  {
+    if ((u[k]<=v) && (v<u[k+1]))
+      value=1;
+    else
+      value=0;
+  }
+  else
+  {
+    if ((u[k+t-1]==u[k]) && (u[k+t]==u[k+1]))  // check for divide by zero
+      value = 0;
+    else
+    if (u[k+t-1]==u[k]) // if a term's denominator is zero,use just the other
+      value = (u[k+t] - v) / (u[k+t] - u[k+1]) * blend(k+1, t-1, u, v);
+    else
+    if (u[k+t]==u[k+1])
+      value = (v - u[k]) / (u[k+t-1] - u[k]) * blend(k, t-1, u, v);
+    else
+      value = (v - u[k]) / (u[k+t-1] - u[k]) * blend(k, t-1, u, v) +
+          (u[k+t] - v) / (u[k+t] - u[k+1]) * blend(k+1, t-1, u, v);
+  }
+  return value;
+}
+
+void splineShape::compute_intervals(int *u, int n, int t)   // figure out the knots
+{
+  int j;
+
+  for (j=0; j<=n+t; j++)
+  {
+    if (j<t)
+      u[j]=0;
+    else
+    if ((t<=j) && (j<=n))
+      u[j]=j-t+1;
+    else
+    if (j>n)
+      u[j]=n-t+2;  // if n-t=-2 then we're screwed, everything goes to 0
+  }
+}
+
+void splineShape::compute_point(int *u, int n, int t, double v, point *control,point *output)
+{
+  int k;
+  double temp;
+
+  // initialize the variables that will hold our outputted point
+  output->x=0;
+  output->y=0;
+  output->z=0;
+
+  for (k=0; k<=n; k++)
+  {
+    temp = blend(k,t,u,v);  // same blend is used for each dimension coordinate
+    output->x = output->x + (control[k]).x * temp;
+    output->y = output->y + (control[k]).y * temp;
+    output->z = output->z + (control[k]).z * temp;
+  }
+}
 #endif
