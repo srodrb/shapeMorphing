@@ -30,13 +30,13 @@ int main(int argc, const char *argv[])
 {
     printf("Iniciando el modulo principal\n");
     //_______________________________________Airfoil parameters
-    float m = 0.0;
-    float p = 0.0;
+    float m = 7.0;
+    float p = 5.0;
     float t = 12.0;
     float c = 1.0; 
 
     naca4parameters parameters(c,m,p,t,0.0,0.0);
-    //meshGen naca7512 (parameters);
+    meshGen naca7512 (parameters);
     splineShape shape(4,parameters);            
     shape.plot();
     /*
