@@ -62,9 +62,11 @@ void meshGen::generateBlockMeshDict()
     float NoseX =  (-H+xu[q])*cos(alpha); //cout << "NoseX value: " << NoseX << endl;
     float NoseZ = -(-H+xu[q])*sin(alpha); //cout << "NoseZ value: " << NoseZ << endl;
     
-    int Nleading  = 90; //ceil(0.95*Nx);//TODO alterado, era 0.3*Nx
-    int Ntrailing = Nx-Nleading;
-    q = Nleading;
+    //int Nleading  = ceil(0.35*Nx);//TODO alterado, era 0.3*Nx
+    //int Ntrailing = Nx-Nleading;
+    int Nleading = 50;
+    int Ntrailing = 50;
+    q = 40;
     //calculamos los vertices que definen la geometria de la malla
     float vertices[24][3];
 
@@ -96,10 +98,11 @@ void meshGen::generateBlockMeshDict()
 
     //Generamos el fichero blockMeshDict
     FILE *out;
-    out = fopen("blockMeshDict","w");
+    int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
+    out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
-    fprintf(out, "| =========                 |                                                 | \n");
+    fprintf(out, "| ==========                  |                                                 | \n");
     fprintf(out, "| \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           | \n");
     fprintf(out, "|  \\\\    /   O peration     | Version:  2.1.0                                 | \n");
     fprintf(out, "|   \\\\  /    A nd           | Web:      www.OpenFOAM.com                      | \n");
