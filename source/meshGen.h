@@ -47,9 +47,9 @@ void meshGen::generateBlockMeshDict()
     const float W = 0.5;
     const float D = 16.0;
     //____Mesh density control parameters______//
-    const int Nx = 30;
+    const int Nx = 100;
     const int ND = 100;
-    const int NT = 200;
+    const int NT = 20;
     const int NW = 1;
     //____Mesh expansion ratios________________//
     const float ExpT = 5;

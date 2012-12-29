@@ -20,32 +20,32 @@ FoamFile
     inlet
     {
         type            patch;
-        nFaces          18;
-        startFace       103640;
+        nFaces          60;
+        startFace       15680;
     }
     outlet
     {
         type            patch;
-        nFaces          400;
-        startFace       103658;
+        nFaces          40;
+        startFace       15740;
     }
     topAndBottom
     {
         type            patch;
-        nFaces          242;
-        startFace       104058;
+        nFaces          340;
+        startFace       15780;
     }
     naca4
     {
         type            wall;
-        nFaces          60;
-        startFace       104300;
+        nFaces          200;
+        startFace       16120;
     }
     defaultFaces
     {
         type            empty;
-        nFaces          104000;
-        startFace       104360;
+        nFaces          16000;
+        startFace       16320;
     }
 )
 
