@@ -4,10 +4,14 @@
 #define MESHGEN_H_
 
 /*
- * Clase que hereda de perfil o de spline para generar el fichero b-spline.
+ * Esta clase puede servir de clase principal a la hora de crear las mallas, 
+ * la idea es que seleccione entre los distintos tipos de perfiles de la familia
+ * NACA que tenemos.
+ * Si el constructor recibe un string con el tipo de familia de perfil que buscamos
+ * puede encargarse de seleccionar la clase que genera sus coordenadas.
  */
 
-//#include "splineShape.h"
+
 #include "common.h"
 #include "naca4.h"
 
@@ -43,8 +47,8 @@ void meshGen::generateBlockMeshDict()
     const float W = 0.5;
     const float D = 16.0;
     //____Mesh density control parameters______//
-    const int Nx = 150;
-    const int ND = 30;
+    const int Nx = 30;
+    const int ND = 100;
     const int NT = 200;
     const int NW = 1;
     //____Mesh expansion ratios________________//
