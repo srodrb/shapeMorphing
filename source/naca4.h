@@ -43,7 +43,6 @@ naca4::naca4(float chord,float M, float P, float T, float angle) : data()
     t       = 0.01*T;
     alpha   = (angle*pi)/180.0;
     c       = chord;
-    q       = ceil(0.2*Ni)-1;
 
     //genero directamente aqui las coordenadas del perfil
     CreateCoordinates();
@@ -57,7 +56,6 @@ naca4::naca4 (naca4parameters parameters) : data()
     c       = parameters.c;
     alpha   = (parameters.angle*pi)/180.0;
     //q       = ceil(0.2*Ni)-1;
-    q = Ni -5;//quiero hacerlo bastante cercano al borde de salida.
 
     printf("Airfoil info: m = %f, p = %f, t = %f, c=%f\n", m,p,t,c);
     CreateCoordinates();
@@ -145,13 +143,12 @@ void naca4::meshGen()
     const float ExpA = 5;
     scale = 1.0; 
     //:::::::::::::::::::::::::::::::::::::::://
-    
+    int Nleading = 40;        //divisiones hacia el borde de entrada
+    int Ntrailing = 70;       //divisiones hacia el borde de salida
+    q = 35;                   //cuanto menor sea mas cerca estoy del borde de entrada (leading)
 
     float NoseX =  (-H+xu[q])*cos(alpha); //cout << "NoseX value: " << NoseX << endl;
     float NoseZ = -(-H+xu[q])*sin(alpha); //cout << "NoseZ value: " << NoseZ << endl;
-    
-    int Nleading  = ceil(0.3*Nx);
-    int Ntrailing = Nx-Nleading;
 
     //calculamos los vertices que definen la geometria de la malla
     float vertices[24][3];
@@ -184,7 +181,8 @@ void naca4::meshGen()
 
     //Generamos el fichero blockMeshDict
     FILE *out;
-    out = fopen("blockMeshDict","w");
+    int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
+    out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
     fprintf(out, "| =========                 |                                                 | \n");

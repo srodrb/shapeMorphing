@@ -66,7 +66,6 @@ class splineShape : public virtual naca4 {
         virtual void plot();//declarado como virtual para que el resto de clases tengan que implementarlo
 
     protected:
-        int ctrlP;//control points
         point *pts;          // puntero de estructuras punto con el que funcionan las funciones.
         int n,t,tnp;
         point * out_pts;     //puntero que utilizan las funciones para el calculo de las splines
@@ -92,7 +91,7 @@ splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (p
      */
     
     n = 8;                     //number of control points. Source adds +1
-    t = 4;                     //degree of polynomial = t-1
+    t = 3;                     //degree of polynomial = t-1
     tnp = 15;
     pts = new point[2*n -1];      //double -1  cause contains upper and lower surface. One point is duplicated.
 
@@ -159,8 +158,6 @@ void splineShape::initialSpline()
 
 
       out_pts = new point[2*Ni]; //antes teniamos Ni elementos en upper y Ni en lower, ahora debemos tener 2 Ni
-
-
       bspline(tnp-1, t, pts, out_pts);
       exportControlPoints();
       updateControlPoints();
@@ -182,13 +179,13 @@ void splineShape::calcSplines()
       //grados del polinomio.
 
       exportControlPoints();
+      exportSplines();
       updateControlPoints();
 }
 
 
 void splineShape::modifyControlPoint(int pointID, displacementStruct displacement)
 {
-    printf("DEBUG: aplicando modificacion a los puntos\n");
     /*
      * Este metodo pretende implementar un movimiento basico de un punto de control:
      * Argumentos:
@@ -234,23 +231,35 @@ void splineShape::updateControlPoints()
      */
 
 
-    printf("Vamos a calcular el valor del indice que corresponde al 0.8 de la cuerda:\n");
-    printf("El valor es: %i\n",calcIndex(0.8,"upper"));
-        pts[0].x = out_pts[0].x;                     pts[0].y=out_pts[0].y;       pts[0].z=0.0;
+        pts[0].x = out_pts[0].x;                             pts[0].y=out_pts[0].y;                            pts[0].z=0.0;
         pts[1].x = out_pts[calcIndex(0.95,"upper")].x;       pts[1].y=out_pts[calcIndex(0.95,"upper")].y;      pts[1].z=0.0;
         pts[2].x = out_pts[calcIndex(0.80,"upper")].x;       pts[2].y=out_pts[calcIndex(0.80,"upper")].y;      pts[2].z=0.0;
         pts[3].x = out_pts[calcIndex(0.50,"upper")].x;       pts[3].y=out_pts[calcIndex(0.50,"upper")].y;      pts[3].z=0.0;
         pts[4].x = out_pts[calcIndex(0.20,"upper")].x;       pts[4].y=out_pts[calcIndex(0.20,"upper")].y;      pts[4].z=0.0;
         pts[5].x = out_pts[calcIndex(0.05,"upper")].x;       pts[5].y=out_pts[calcIndex(0.05,"upper")].y;      pts[5].z=0.0;
-        pts[6].x = out_pts[calcIndex(0.01,"upper")].x;       pts[6].y=out_pts[calcIndex(0.01,"upper")].y;      pts[6].z=0.0;
-        pts[7].x = 0.0;                pts[7].y=0.0;                pts[7].z=0.0;
+        pts[6].x = out_pts[calcIndex(0.005,"upper")].x;      pts[6].y=out_pts[calcIndex(0.005,"upper")].y;     pts[6].z=0.0;
+
+        pts[7].x = 0.0;                                      pts[7].y=0.0;                                     pts[7].z=0.0;
         
-        pts[8].x =  out_pts[calcIndex(0.01,"lower")].x;      pts[8 ].y=out_pts[calcIndex(0.01,"lower")].y;       pts[8].z=0.0;
-        pts[9].x =  out_pts[calcIndex(0.05,"lower")].x;      pts[9 ].y=out_pts[calcIndex(0.05,"lower")].y;      pts[9].z=0.0;
+        pts[8].x =  out_pts[calcIndex(0.005,"lower")].x;     pts[8 ].y=out_pts[calcIndex(0.005,"lower")].y;    pts[8].z=0.0;
+        pts[9].x =  out_pts[calcIndex(0.05,"lower")].x;      pts[9 ].y=out_pts[calcIndex(0.05,"lower")].y;     pts[9].z=0.0;
         pts[10].x = out_pts[calcIndex(0.20,"lower")].x;      pts[10].y=out_pts[calcIndex(0.20,"lower")].y;     pts[10].z=0.0;
         pts[11].x = out_pts[calcIndex(0.50,"lower")].x;      pts[11].y=out_pts[calcIndex(0.50,"lower")].y;     pts[11].z=0.0;
         pts[12].x = out_pts[calcIndex(0.80,"lower")].x;      pts[12].y=out_pts[calcIndex(0.80,"lower")].y;     pts[12].z=0.0;
         pts[13].x = out_pts[calcIndex(0.95,"lower")].x;      pts[13].y=out_pts[calcIndex(0.95,"lower")].y;     pts[13].z=0.0;
+
+        //ahora actualizamos los valores de los vectores xu,zu,xl,zl..
+        for (int i = 0; i < Ni; i++) {
+            //printf("xu[%d] = %f\n", i,out_pts[Ni-i].x);
+            xu[i] = out_pts[Ni-i].x;
+            zu[i] = out_pts[Ni-i].y;
+        }
+        xu[0] = 0.0; zu[0] = 0.0;
+        for (int i = 0; i < Ni; i++) {
+            //printf("xl[%d] = %f\n", i,out_pts[Ni+i].x);
+            xl[i] = out_pts[Ni+i].x;
+            zl[i] = out_pts[Ni+i].y;
+        }
 }
 
 
@@ -262,7 +271,7 @@ void splineShape::exportControlPoints()
           fprintf(out, "%f\t%f\t%d\n", pts[i].x,pts[i].y,i); 
     }
     fclose(out);
-    printf("Exported control points file.\n");
+    printf("Exported control points to controlPoints.dat.\n");
 }
 
 void splineShape::exportSplines()
@@ -273,7 +282,7 @@ void splineShape::exportSplines()
           fprintf(out, "%f\t%f\t%d\n", out_pts[i].x,out_pts[i].y,i); 
     }
     fclose(out);
-    printf("Exported control points file.\n");
+    printf("Exported spline points to airfoilCoordinates.dat.\n");
 }
 
 void splineShape::plot()
@@ -415,7 +424,6 @@ int splineShape::calcIndex(double value, const char* zone)
         for (int i = 0; i < 2*Ni-1; i++) {
             if (out_pts[i].x >= value and out_pts[i+1].x < value)
             {
-                printf("Lo tenemos, es: %d\n", i);
                 return i;
                 break;
             }
@@ -423,11 +431,9 @@ int splineShape::calcIndex(double value, const char* zone)
     }
     else
     {
-        printf("Estamos en lower\n");
         for (int i = 0; i < 2*Ni-1; i++) {
             if(out_pts[i].x <= value and out_pts[i+1].x > value)
             {
-                printf("Lo tenemos (para lower surface, es: %d\n", i);
                 return i+1; //sumamos uno porque vamos con retraso...
                 break;
             }

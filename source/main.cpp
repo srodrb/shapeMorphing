@@ -37,7 +37,8 @@ int main(int argc, const char *argv[])
     float c = 1.0; 
 
     naca4parameters parameters(c,m,p,t,0.0,0.0);
-    meshGen naca7512 (parameters);
+    //meshGen naca7512 (parameters);
+    naca4 foil(parameters);
     splineShape shape(4,parameters);            
 
     shape.plot();
@@ -49,8 +50,10 @@ int main(int argc, const char *argv[])
     shape.modifyControlPoint(pointID, displacement);
     shape.plot();
 
+    //Una vez hemos terminado de hacer modificaciones sobre los perfiles generamos la malla
+    shape.meshGen();
     
-    //int output = system ("cd ../OFcase && blockMesh && checkMesh && paraFoam" );
+    int output = system ("cd ../OFcase && blockMesh && checkMesh && paraFoam" );
 
     return 0;
 }
