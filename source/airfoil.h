@@ -405,7 +405,6 @@ void airfoil::meshGen()
 
     fclose(out);
 
-    cout << "----> Generated blockMeshDict" << endl;
 }
 
 void airfoil::outPlot()

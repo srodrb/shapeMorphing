@@ -14,17 +14,23 @@
 
 using namespace std;
 
-int menu()
-{
-	static int option = 0;
-	printf ("           Choose an option: \n");
-	printf (
-           "	  0			NACA 4 digits series.\n"
-           "	  1			NACA 5 digits series.\n"
-           "	  2			NACA 6 digits series.\n");
+//nombre del programa
 
-	cout << "	Selection?: "; cin >> option;
-	return option;
+#include <stdio.h>
+
+char *c, cad[300];
+
+char* readPath()
+{
+    FILE *fp;
+
+    fp=fopen(".path.txt", "r");
+
+    while(c=fgets(cad,100,fp))
+        //printf("%s",cad);
+    
+    return cad;
 }
+
 
 #endif 
