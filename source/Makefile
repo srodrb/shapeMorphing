@@ -13,10 +13,11 @@ install:
 	@echo '**...Installation completed!'
 
 clean:
+	#si colocamos un - delante de la orden, esta se silencia
 	@echo '**Removing obsolete files...'
-	rm *.h.gch
-	rm *.o
-	rm cmeshfoil
+	-rm *.h.gch
+	-rm *.o
+	-rm cmeshfoil
 	@echo '**Done...'
 
 #------------- Compilacion de modulos----#
