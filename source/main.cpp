@@ -22,7 +22,6 @@
 #include "meshGen.h"
 
 #include "splineShape.h"
-#include "parameterStructs.h"
 #include "naca4.h"
 
 /*
@@ -66,10 +65,11 @@ void print_usage (FILE* stream, int exit_code)
   fprintf (stream,
           "Basic options:\n"
             "\t -h --help Display this usage information.\n" 
-            "\t -p --Set OpenFoam case path.\n"
-            "\t -P --Display actual path for blockMeshDict.\n"
             "\t -o --output filename Write output to file.\n"
             "\t -v --verbose Print verbose messages.\n"
+         "Configuration options:\n"
+            "\t -p --Set OpenFoam case path.\n"
+            "\t -P --Display actual path for blockMeshDict.\n"
          "Mesh generation options:\n"
             "\t -N --Naca 4 digits series airfoils.\n"
          "Advanced options (beta):\n"
@@ -108,6 +108,11 @@ do {
               /* User has requested usage information. Print it to standard output, and exit with exit code zero (normal termination). */
       print_usage (stdout, 0);
     case 'p':
+      {
+          printf("Please write the OpenFOAM case complete path (p.e: /home/user/case/): \n");
+          //TODO tengo que hacer que cuando se introduzca la ruta el programa se cierre o reinicie el loop
+          //     tambien tiene que leer la ruta al principio!!
+      }
       printf("Not implemented yet\n");
       break;
     case 'P':

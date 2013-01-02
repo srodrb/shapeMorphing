@@ -23,7 +23,7 @@ public:
     void meshGen();
     void meshGen2();
     void outPlot();
-    void exportCoordinates( const char* filename);
+    void exportCoordinates();
     
 protected:
    float c,m,p,t,alpha,scale;
@@ -58,6 +58,7 @@ naca4::naca4 (naca4parameters parameters) : data()
 
     printf("Airfoil info: m = %f, p = %f, t = %f, c=%f\n", m,p,t,c);
     CreateCoordinates();
+    exportCoordinates();
 }
 
 void naca4::CreateCoordinates()
@@ -614,10 +615,10 @@ void naca4::outPlot()
     }
 }
 
-void naca4::exportCoordinates(const char* filename)
+void naca4::exportCoordinates()
 {
     FILE *out;
-    out = fopen(filename,"w");
+    out = fopen("../output/coordinates.dat","w");
     for (int i = 0; i < Ni; ++i)
     {
         fprintf(out, "%f %f %f %f\n", xu[i],zu[i],xl[i],zl[i]);

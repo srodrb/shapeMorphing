@@ -28,7 +28,7 @@ int main()
     while(c=fgets(cad,100,fp))
         printf("%s",cad);
 
-    getchar();
+    //getchar();
     return 0;
 }
 

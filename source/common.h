@@ -26,7 +26,7 @@ char* readPath()
 
     fp=fopen(".path.txt", "r");
 
-    while(c=fgets(cad,100,fp))
+    while(c=fgets(cad,300,fp))
         //printf("%s",cad);
     
     return cad;
