@@ -1,0 +1,96 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+APPNAME	makefile	/^APPNAME = cmeshfoil$/;"	m
+C	src/common.cpp	/^char *C, cad[300];$/;"	v
+CC	makefile	/^CC = g++$/;"	m
+CCFLAGS	makefile	/^CCFLAGS = -c -g$/;"	m
+COMMON_H_	inc/common.h	6;"	d
+CreateCoordinates	src/naca4.cpp	/^void naca4::CreateCoordinates()$/;"	f	class:naca4
+DATA_H_	inc/data.h	2;"	d
+LIBSDIR	makefile	/^LIBSDIR = -I inc -I obj$/;"	m
+MESHGEN_H_	inc/meshGen.h	4;"	d
+NACA4_H_	inc/naca4.h	6;"	d
+Ni	inc/data.h	/^        int Ni;                      \/\/numero de puntos del perfil$/;"	m	class:data
+OBJDIR	makefile	/^OBJDIR = obj$/;"	m
+PARAMETERSTRUCTS_H_	inc/parameterStructs.h	3;"	d
+SPLINESHAPE_H_	inc/splineShape.h	3;"	d
+a	inc/meshGen.h	/^        int a;$/;"	m	class:meshGen
+alpha	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+angle	inc/parameterStructs.h	/^    float angle; \/\/angle of attack$/;"	m	struct:naca4parameters
+bl_thickness	inc/parameterStructs.h	/^    float bl_thickness;\/\/boundary layer thickness$/;"	m	struct:naca4parameters
+blend	src/splineShape.cpp	/^double splineShape::blend(int k, int t, int *u, double v)  \/\/ calculate the blending value$/;"	f	class:splineShape
+bspline	src/splineShape.cpp	/^void splineShape::bspline(int n, int t, point *control, point *output)$/;"	f	class:splineShape
+c	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+c	inc/parameterStructs.h	/^    float c;$/;"	m	struct:naca4parameters
+cad	src/common.cpp	/^char *C, cad[300];$/;"	v
+calcIndex	src/splineShape.cpp	/^int splineShape::calcIndex(double value, const char* zone)$/;"	f	class:splineShape
+calcSplines	src/splineShape.cpp	/^void splineShape::calcSplines()$/;"	f	class:splineShape
+compute_intervals	src/splineShape.cpp	/^void splineShape::compute_intervals(int *u, int n, int t)   \/\/ figure out the knots$/;"	f	class:splineShape
+compute_point	src/splineShape.cpp	/^void splineShape::compute_point(int *u, int n, int t, double v, point *control,point *output)$/;"	f	class:splineShape
+data	inc/data.h	/^class data {$/;"	c
+data	src/data.cpp	/^data::data()$/;"	f	class:data
+displacementStruct	inc/splineShape.h	/^struct displacementStruct{$/;"	s
+displacementStruct	src/splineShape.cpp	/^displacementStruct::displacementStruct(double angle, double distance)$/;"	f	class:displacementStruct
+exportControlPoints	src/splineShape.cpp	/^void splineShape::exportControlPoints()$/;"	f	class:splineShape
+exportCoordinates	src/naca4.cpp	/^void naca4::exportCoordinates()$/;"	f	class:naca4
+exportSplines	src/splineShape.cpp	/^void splineShape::exportSplines()$/;"	f	class:splineShape
+generateBlockMeshDict	src/meshGen.cpp	/^void meshGen::generateBlockMeshDict()$/;"	f	class:meshGen
+initialSpline	src/splineShape.cpp	/^void splineShape::initialSpline()$/;"	f	class:splineShape
+m	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+m	inc/parameterStructs.h	/^    float m;$/;"	m	struct:naca4parameters
+main	src/Cmesh.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	src/main.cpp	/^int main (int argc, char* argv[]) $/;"	f
+main	src/read.cpp	/^int main()$/;"	f
+meshGen	inc/meshGen.h	/^class meshGen : public naca4 {$/;"	c
+meshGen	src/meshGen.cpp	/^meshGen::meshGen(naca4parameters parameters): naca4(parameters)$/;"	f	class:meshGen
+meshGen	src/naca4.cpp	/^void naca4::meshGen()$/;"	f	class:naca4
+meshGen2	src/naca4.cpp	/^void naca4::meshGen2()$/;"	f	class:naca4
+modifyControlPoint	src/splineShape.cpp	/^void splineShape::modifyControlPoint(int pointID, displacementStruct displacement)$/;"	f	class:splineShape
+n	inc/splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
+naca4	inc/naca4.h	/^class naca4 : public data{$/;"	c
+naca4	src/naca4.cpp	/^naca4::naca4 (naca4parameters parameters) : data()$/;"	f	class:naca4
+naca4	src/naca4.cpp	/^naca4::naca4(float chord,float M, float P, float T, float angle) : data()$/;"	f	class:naca4
+naca4parameters	inc/parameterStructs.h	/^struct naca4parameters{$/;"	s
+naca4parameters	src/parameterStructs.cpp	/^naca4parameters::naca4parameters(float C, float M, float P, float T, float AOA, float BL_THICKNESS)$/;"	f	class:naca4parameters
+norm	inc/splineShape.h	/^    double norm;  \/\/modulo del vector.$/;"	m	struct:displacementStruct
+outPlot	src/naca4.cpp	/^void naca4::outPlot()$/;"	f	class:naca4
+out_pts	inc/splineShape.h	/^        point * out_pts;     \/\/puntero que utilizan las funciones para el calculo de las splines$/;"	m	class:splineShape
+p	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+p	inc/parameterStructs.h	/^    float p;$/;"	m	struct:naca4parameters
+pi	inc/naca4.h	/^   static const float pi = 3.1416;$/;"	m	class:naca4
+plot	src/naca4.cpp	/^void naca4::plot()$/;"	f	class:naca4
+plot	src/splineShape.cpp	/^void splineShape::plot()$/;"	f	class:splineShape
+point	inc/splineShape.h	/^struct point {$/;"	s
+print_extended_info	src/Cmesh.cpp	/^void print_extended_info ()$/;"	f
+print_usage	src/Cmesh.cpp	/^void print_usage (FILE* stream, int exit_code)$/;"	f
+print_usage	src/main.cpp	/^void print_usage (FILE* stream, int exit_code) $/;"	f
+program_name	src/Cmesh.cpp	/^const char* program_name;$/;"	v
+program_name	src/main.cpp	/^const char* program_name;$/;"	v
+pts	inc/splineShape.h	/^        point *pts;          \/\/ puntero de estructuras punto con el que funcionan las funciones.$/;"	m	class:splineShape
+q	inc/naca4.h	/^   int q;$/;"	m	class:naca4
+readPath	src/common.cpp	/^char* readPath()$/;"	f
+runAnsysToFoam	OFcase/Allrun	/^runAnsysToFoam()$/;"	f
+scale	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+splineShape	inc/splineShape.h	/^class splineShape : public virtual naca4 {$/;"	c
+splineShape	src/splineShape.cpp	/^splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (parameters)$/;"	f	class:splineShape
+t	inc/naca4.h	/^   float c,m,p,t,alpha,scale;$/;"	m	class:naca4
+t	inc/parameterStructs.h	/^    float t;$/;"	m	struct:naca4parameters
+t	inc/splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
+theta	inc/splineShape.h	/^    double theta; \/\/angulo de desplazamiento$/;"	m	struct:displacementStruct
+tnp	inc/splineShape.h	/^        int n,t,tnp;$/;"	m	class:splineShape
+updateControlPoints	src/splineShape.cpp	/^void splineShape::updateControlPoints()$/;"	f	class:splineShape
+x	inc/splineShape.h	/^  double x;$/;"	m	struct:point
+xl	inc/data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
+xu	inc/data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
+y	inc/splineShape.h	/^  double y;$/;"	m	struct:point
+z	inc/splineShape.h	/^  double z;$/;"	m	struct:point
+zl	inc/data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
+zu	inc/data.h	/^        double *xu,*zu,*xl,*zl;      \/\/punteros para almacenar las coordenadas$/;"	m	class:data
+~data	inc/data.h	/^        ~data(){};$/;"	f	class:data
+~meshGen	inc/meshGen.h	/^        ~meshGen(){};$/;"	f	class:meshGen
+~naca4	inc/naca4.h	/^    ~naca4 () {};$/;"	f	class:naca4
+~splineShape	inc/splineShape.h	/^        ~splineShape(){};$/;"	f	class:splineShape

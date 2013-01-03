@@ -14,7 +14,7 @@ displacementStruct::displacementStruct(double angle, double distance)
 
 //************** splineShaple class methods ***********************************//
 
-splineShape::splineShape(int controlPoints, naca4parameters parameters):naca4 (parameters)
+splineShape::splineShape(naca4parameters parameters):naca4 (parameters)
 {
     /* La clase tiene dos etapas:
      *      - Seleccionar las coordenadas del perfil que van a ser los puntos de control
@@ -128,7 +128,7 @@ void splineShape::modifyControlPoint(int pointID, displacementStruct displacemen
     double xdisplacement,ydisplacement;
     
     //Criterio, los puntos de control del borde de ataque y del borde de salida quedan fijos.
-    if ( pointID == 0 or pointID == n+1 or pointID == 2*n)//TODO anadir la condicion de pointID == 0
+    if ( pointID == 0 or pointID == n-1 or pointID == 2*(n-1))//TODO anadir la condicion de pointID == 0
     {
         printf("Fixed point, implement an Error sentence!\n");
         xdisplacement = 0.0;
@@ -197,28 +197,29 @@ void splineShape::updateControlPoints()
 void splineShape::exportControlPoints()
 {
     FILE *out;
-    out = fopen("controlPoints.dat", "w");
+    out = fopen("output/controlPoints.dat", "w");
     for (int i = 0; i < tnp; i++) {
           fprintf(out, "%f\t%f\t%d\n", pts[i].x,pts[i].y,i); 
     }
     fclose(out);
-    printf("Exported control points to controlPoints.dat.\n");
+    printf("Exported control points to output/controlPoints.dat.\n");
 }
 
 void splineShape::exportSplines()
 {
     FILE *out;
-    out = fopen("airfoilCoordinates.dat", "w");
+    out = fopen("output/airfoilCoordinates.dat", "w");
+    /*//Debug source, print coordinates.
     for (int i = 0; i < 2*Ni-1; i++) {
           fprintf(out, "%f\t%f\t%d\n", out_pts[i].x,out_pts[i].y,i); 
-    }
+    }*/
     fclose(out);
-    printf("Exported spline points to airfoilCoordinates.dat.\n");
+    printf("Exported spline points to output/airfoilCoordinates.dat.\n");
 }
 
 void splineShape::plot()
 {
-    int output = system ("gnuplot -persist plotSpline.gp");
+    int output = system ("cd output && gnuplot -persist plotSpline.gp && cd ..");
 }
 
 
@@ -269,10 +270,10 @@ void splineShape::bspline(int n, int t, point *control, point *output)
       //ahora que tenemos los calculos hechos quiero generar un fichero de salida
       //para Gnuplot para poder ver los resultados.
       FILE *out;
-      out = fopen("splinePoints.dat","w");
+      out = fopen("output/splinePoints.dat","w");
       for (int i = 0; i < 2*Ni; i++) {
           fprintf(out, "%f\t%f\t%f\n", output[i].x,output[i].y,output[i].z);
-          printf("Coordenadas: %f\t%f\t%d\n", output[i].x,output[i].y,i,n);
+          //printf("Coordenadas: %f\t%f\t%d\n", output[i].x,output[i].y,i,n);
       }
       fclose(out);
 

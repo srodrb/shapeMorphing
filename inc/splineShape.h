@@ -47,7 +47,7 @@ class splineShape : public virtual naca4 {
      */
     
     public:
-        splineShape (int controlPoints, naca4parameters parameters);
+        splineShape (naca4parameters parameters);
         ~splineShape(){};
 
         //-----Metodos de la clase------//

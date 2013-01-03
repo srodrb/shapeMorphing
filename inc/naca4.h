@@ -22,8 +22,8 @@ public:
     void CreateCoordinates();
     void meshGen();
     void meshGen2();
-    void outPlot();
     void exportCoordinates();
+    virtual void plot(); //otras clases tienen el mismo metodo, por eso es virtual
     
 protected:
    float c,m,p,t,alpha,scale;

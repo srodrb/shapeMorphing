@@ -10,8 +10,8 @@ naca4::naca4(float chord,float M, float P, float T, float angle) : data()
     alpha   = (angle*pi)/180.0;
     c       = chord;
 
-    //genero directamente aqui las coordenadas del perfil
     CreateCoordinates();
+    exportCoordinates();
 }
 
 naca4::naca4 (naca4parameters parameters) : data()
@@ -147,8 +147,9 @@ void naca4::meshGen()
 
     //Generamos el fichero blockMeshDict
     FILE *out;
-    int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
-    out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
+    //int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
+    //out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
+    out = fopen("blockMeshDict","w");
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
     fprintf(out, "| =========                 |                                                 | \n");
@@ -561,30 +562,10 @@ void naca4::meshGen2()
     cout << "----> Generated blockMeshDict" << endl;
 }
 
-void naca4::outPlot()
-{
-    FILE *out;
-    out = fopen("coordinates.dat","w");
-    for (int i = 0; i < Ni; ++i)
-    {
-        fprintf(out, "%f %f %f %f\n", xu[i],zu[i],xl[i],zl[i]);
-    }
-    fclose(out);
-    //system("mv coordinates.dat coordinates");
-    int output = system ("gnuplot plotnaca4.gp");
-    if( output != 0)
-    {
-        cout << "Error, algo ha salido mal con GNUPlot" << endl;
-    }
-    else{
-        cout << "No hay problemas con el comando GnuPlot." << endl;
-    }
-}
-
 void naca4::exportCoordinates()
 {
     FILE *out;
-    out = fopen("../output/coordinates.dat","w");
+    out = fopen("output/coordinates.dat","w");
     for (int i = 0; i < Ni; ++i)
     {
         fprintf(out, "%f %f %f %f\n", xu[i],zu[i],xl[i],zl[i]);
@@ -602,5 +583,9 @@ void naca4::exportCoordinates()
         cout << "No hay problemas con el comando GnuPlot." << endl;
     }
     */
-    printf("Coordinates file has been generated. Status: OK.\n");
+}
+
+void naca4::plot()
+{
+    int output = system("cd output && gnuplot -persist plotNaca4.gp && cd ..");
 }

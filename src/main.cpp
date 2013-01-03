@@ -72,6 +72,7 @@ void print_usage (FILE* stream, int exit_code)
          "Configuration options:\n"
             "\t -p --Set OpenFoam case path.\n"
             "\t -P --Display actual path for blockMeshDict.\n"
+            "\t -g --Shows airfoil plot with Gnuplot.\n"
          "Mesh generation options:\n"
             "\t -N --Naca 4 digits series airfoils.\n"
          "Advanced options (beta):\n"
@@ -83,7 +84,7 @@ int main (int argc, char* argv[])
 {
   int next_option;
   /* A string listing valid short options letters. */ 
-  const char* const short_options = "hp:Po:vN";
+  const char* const short_options = "hp:Pgo:vNS";
   /* An array describing valid long options. */
   const struct option long_options[] = 
   {
@@ -92,7 +93,9 @@ int main (int argc, char* argv[])
         { "pathdisplay" , 0, NULL, 'P' },
         { "output"      , 1, NULL, 'o' }, 
         { "verbose"     , 0, NULL, 'v' },
+        { "graph"       , 0, NULL, 'g' },
         { "Naca4"       , 0, NULL, 'N' },
+        { "ShapeOpt"    , 0, NULL, 'S' },
         { NULL          , 0, NULL,  0  } /* Required at end of array. */ 
   };
 /* The name of the file to receive program output, or NULL for standard output. */
@@ -100,6 +103,7 @@ const char* output_filename = NULL;
 /* Whether to display verbose messages. */ 
 int verbose = 0;
 program_name = "CMeshFoil"; //Program name
+bool plotOption;            //Plot option
 
 do {
   next_option = getopt_long (argc, argv, short_options,
@@ -131,10 +135,15 @@ do {
       break;
 
     //================================================================ MESH GENERATION OPTIONS =======//
+    case 'g':
+      {
+          plotOption = true;
+      }
+      break;
+
     case 'N'://NACA 4 series
       {
 
-        printf("Please, introduce airfoil parameters bellow. Note: float values are allowed.:\n");
         float m,p,t;
         cout << "\tMaximum camber (m) value?             "; cin >> m;
         cout << "\tPosition of maximum camber (p) value? "; cin >> p;
@@ -144,16 +153,47 @@ do {
         naca4parameters parameters(1.0,m,p,t,0.0,0.0);
         // Create airfoil
         naca4 airfoil(parameters);
+        
+        if(plotOption == true)
+        {
+            airfoil.plot();
+        }
+        
         airfoil.meshGen();
         printf("BlockMeshDict has been created on default path.\n");
       }
       break;
+
     case '?': /* The user specified an invalid option. */
               /* Print usage information to standard error, and exit with exit
               code one (indicating abnormal termination). */ 
       print_usage (stderr, 1);
+
+    case 'S':
+      {
+          float m,p,t;
+         cout << "\tMaximum camber (m) value?             "; cin >> m;
+         cout << "\tPosition of maximum camber (p) value? "; cin >> p;
+         cout << "\tMaximum thickness value (t) value?    "; cin >> t;
+
+         naca4parameters parameters(1.0,m,p,t,0.0,0.0);
+         splineShape airfoilShape(parameters);
+         printf("spline created!\n");
+         
+         if(plotOption == true)
+         {
+            airfoilShape.plot();
+         }
+        displacementStruct displacement(315.0,0.05);
+        int pointID = 11;
+        airfoilShape.modifyControlPoint(pointID, displacement);
+        airfoilShape.plot();
+         
+      }
+    
     case -1: 
       break;
+    
     default: 
       abort ();
 } 

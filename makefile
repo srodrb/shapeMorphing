@@ -25,6 +25,7 @@ install:
 $(APPNAME): main.cpp common.o data.o parameterStructs.o meshGen.o splineShape.o naca4.o
 	$(CC) $(LIBSDIR) $^ -o $(APPNAME)
 	chmod +x $(APPNAME)
+	rm *.o                              #clean objects on actual folder
 
 meshGen.o: meshGen.cpp meshGen.h naca4.o
 	$(CC) $(LIBSDIR) $(CCFLAGS) $<
