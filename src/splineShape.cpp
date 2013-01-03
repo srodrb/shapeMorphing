@@ -24,9 +24,10 @@ splineShape::splineShape(naca4parameters parameters):naca4 (parameters)
     n = 8;                     //number of control points. Source adds +1
     t = 3;                     //degree of polynomial = t-1
     tnp = 15;
-    pts = new point[2*n -1];      //double -1  cause contains upper and lower surface. One point is duplicated.
-
-    //Iniciamos el constructor con la spline basica sobre la que luego trabajaremos
+    pts          = new point[2*n -1];      //double -1  cause contains upper and lower surface. One point is duplicated.
+    original_pts = new point[2*n -1];      //double -1  cause contains upper and lower surface. One point is duplicated.
+    
+    // Basic construction of spline
     initialSpline();
 }
 
@@ -87,6 +88,13 @@ void splineShape::initialSpline()
         pts[13].x = xl[84];      pts[13].y=zl[84];     pts[13].z=0.0;
         pts[14].x = xu[Ni-1];    pts[14].y=zu[Ni-1];   pts[14].z=0.0;
 
+    // Copy pts values to original_pts cause later we will need it.
+    for (int i = 0; i < 2*n; i++) {
+        original_pts[i].x = pts[i].x; 
+        original_pts[i].y = pts[i].y; 
+        original_pts[i].z = pts[i].z; 
+    }
+
 
       out_pts = new point[2*Ni]; //antes teniamos Ni elementos en upper y Ni en lower, ahora debemos tener 2 Ni
       bspline(tnp-1, t, pts, out_pts);
@@ -130,7 +138,7 @@ void splineShape::modifyControlPoint(int pointID, displacementStruct displacemen
     //Criterio, los puntos de control del borde de ataque y del borde de salida quedan fijos.
     if ( pointID == 0 or pointID == n-1 or pointID == 2*(n-1))//TODO anadir la condicion de pointID == 0
     {
-        printf("Fixed point, implement an Error sentence!\n");
+        // There are fixed points.
         xdisplacement = 0.0;
         ydisplacement = 0.0;
     }

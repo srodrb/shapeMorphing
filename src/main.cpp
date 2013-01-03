@@ -76,15 +76,27 @@ void print_usage (FILE* stream, int exit_code)
          "Mesh generation options:\n"
             "\t -N --Naca 4 digits series airfoils.\n"
          "Advanced options (beta):\n"
-            "\t -S --Airfoil shape optimization.\n");
+            "\t -S --Airfoil shape optimization.\n"
+         "Postprocessing options:\n"
+            "\t -c --Choose OpenFOAM solver (not implemented).\n"
+            "\t -C --Generate OpenFOAM case on specified path.\n"
+            "\t -r --Run case with OpenFOAM solver.\n"
+            "\t -m --Build mesh, check and refine..\n");
   exit (exit_code); 
 }
 /* Main program entry point. ARGC contains number of argument list elements; ARGV is an array of pointers to them. */
 int main (int argc, char* argv[]) 
 {
+
+    //TODO vamos con las pruebas:
+    char nombre[] = "Gema";
+    char apellido[] = "Zaragoza";
+    strcat(nombre,apellido);
+    cout << "nombre: " << nombre << " apellido " << apellido << endl;
+
   int next_option;
   /* A string listing valid short options letters. */ 
-  const char* const short_options = "hp:Pgo:vNS";
+  const char* const short_options = "hp:Pgo:vNSm";
   /* An array describing valid long options. */
   const struct option long_options[] = 
   {
@@ -96,6 +108,7 @@ int main (int argc, char* argv[])
         { "graph"       , 0, NULL, 'g' },
         { "Naca4"       , 0, NULL, 'N' },
         { "ShapeOpt"    , 0, NULL, 'S' },
+        { "Mesh"        , 0, NULL, 'm' },
         { NULL          , 0, NULL,  0  } /* Required at end of array. */ 
   };
 /* The name of the file to receive program output, or NULL for standard output. */
@@ -190,6 +203,14 @@ do {
         airfoilShape.plot();
          
       }
+
+    case 'm':
+      {
+          // Build mesh with blockMesh command and check
+          // and refine with checkMesh and refineMesh.
+        int order = system ("blockMesh && checkMesh && paraFoam"); //refineMesh is optional
+      }
+      break;
     
     case -1: 
       break;

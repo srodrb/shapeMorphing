@@ -12,4 +12,10 @@ char* readPath()
         //printf("%s",cad);
     
     return cad;
-}
+};
+
+void createOFcase()
+{
+
+    int order = system("mkdir constant && mkdir constant/polymesh");
+};

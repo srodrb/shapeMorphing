@@ -50,7 +50,7 @@ class splineShape : public virtual naca4 {
         splineShape (naca4parameters parameters);
         ~splineShape(){};
 
-        //-----Metodos de la clase------//
+        //----- Class methods ------//
         void initialSpline();
         void calcSplines();
         void modifyControlPoint(int pointID, displacementStruct displacement);
@@ -60,15 +60,15 @@ class splineShape : public virtual naca4 {
         virtual void plot();//declarado como virtual para que el resto de clases tengan que implementarlo
 
     protected:
-        point *pts;          // puntero de estructuras punto con el que funcionan las funciones.
-        int n,t,tnp;
-        point * out_pts;     //puntero que utilizan las funciones para el calculo de las splines
-        /*
-         * n; numero de puntos de control
-         * t: grado de la b-spline
-         */
+        point *pts;                 // puntero de estructuras punto con el que funcionan las funciones.
+        point *original_pts;     // original points are saved for calculus purposes.
+        int n,                      // number of control points nimus one.
+            t,                      // polynomial degree plus one.
+            tnp;    
+        point * out_pts;            //puntero que utilizan las funciones para el calculo de las splines
 
      private:
+        // b-spline calc functions
         void bspline(int n, int t, point *control, point *output);
         double blend(int k, int t, int *u, double v);
         void compute_intervals(int *u, int n, int t);

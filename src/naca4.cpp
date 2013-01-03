@@ -149,7 +149,7 @@ void naca4::meshGen()
     FILE *out;
     //int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
     //out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
-    out = fopen("blockMeshDict","w");
+    out = fopen("/blockMeshDict","w");
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
     fprintf(out, "| =========                 |                                                 | \n");

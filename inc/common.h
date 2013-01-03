@@ -6,6 +6,7 @@
 #define COMMON_H_
 
 #include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
@@ -19,6 +20,7 @@ using namespace std;
 #include <stdio.h>
 
 char* readPath();
+void createOFcase();
 
 
 

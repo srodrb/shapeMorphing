@@ -10,6 +10,8 @@ vpath %.o obj
 
 APPNAME = cmeshfoil
 
+#.SILENT: //para no ver aviso //para no ver aviss
+
 all: cmeshfoil
 
 clean:
