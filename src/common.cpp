@@ -14,8 +14,44 @@ char* readPath()
     return cad;
 };
 
-void createOFcase()
+void changeToActualDir()
+{
+    long size = 1000;
+    char *ptr;
+    char *buf;
+
+    if ( (buf = (char*)malloc(size*sizeof(char))) != NULL)
+    {
+        ptr = getcwd(buf, size*sizeof(char) );
+    }
+    char changedir[1000] = "cd ";
+    strcat(changedir,ptr);
+    cout << changedir << endl;
+    cout << ptr << endl;
+    system(changedir);
+    
+    ptr = getcwd(buf,size*sizeof(char));
+    cout << ptr << endl;
+};
+
+char* BlockMeshDictPath()
 {
 
-    int order = system("mkdir constant && mkdir constant/polymesh");
-};
+    long size = 1000;
+    char *ptr;
+    char *buf;
+
+    if ( (buf = (char*)malloc(size*sizeof(char))) != NULL)
+    {
+        ptr = getcwd(buf, size*sizeof(char) );
+    }
+    //char changedir[1000] = "cd ";
+    char OFpath[100] = "/caseOF/constant/polyMesh/blockMeshDict";
+    //strcat(changedir,ptr);
+    strcat(ptr,OFpath);
+    //cout << changedir << endl;
+    cout << ptr << endl;
+    
+
+    return ptr;
+}

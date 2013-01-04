@@ -20,9 +20,10 @@ using namespace std;
 
 #include <stdio.h>
 
-char* readPath();
-void createOFcase();
 
+char* readPath();
+void changeToActualDir();     // It changes path to actual dir with system "command"
+char* BlockMeshDictPath();
 
 
 #endif 

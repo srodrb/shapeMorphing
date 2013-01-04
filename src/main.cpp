@@ -26,106 +26,59 @@
 #include "splineShape.h"
 #include "naca4.h"
 
-/*
-int main(int argc, const char *argv[])
-{
-    printf("Main module... Menu isn't implemented yet!! \n");
-    
-    //_______________________________________Airfoil parameters
-    float m = 4.0;
-    float p = 4.0;
-    float t = 12.0;
-    float c = 1.0; 
-
-    naca4parameters parameters(c,m,p,t,0.0,0.0);
-    //meshGen naca7512 (parameters);
-    naca4 foil(parameters);
-    splineShape shape(4,parameters);            
-
-    shape.plot();
-    displacementStruct displacement(315.0,0.05);
-    int pointID = 11;
-    shape.modifyControlPoint(pointID, displacement);
-    shape.plot();
-    
-    shape.modifyControlPoint(pointID, displacement);
-    shape.plot();
-
-    //Una vez hemos terminado de hacer modificaciones sobre los perfiles generamos la malla
-    shape.meshGen();
-    
-    int output = system ("cd ../OFcase && blockMesh && checkMesh && paraFoam" );
-
-    return 0;
-}*/
-
 
 const char* program_name;
 void print_usage (FILE* stream, int exit_code) 
 {
-  fprintf (stream, "Usage: %s options [ inputfile ... ]\n", program_name); 
+  fprintf (stream, "\n\tUsage: %s options [ inputfile ... ]\n", program_name); 
+  fprintf (stream, "\t       [Configuration][Mesh][Advanced][Postprocessing]\n\n");
   fprintf (stream,
-          "Basic options:\n"
-            "\t -h --help Display this usage information.\n" 
-            "\t -o --output filename Write output to file.\n"
-            "\t -v --verbose Print verbose messages.\n"
-         "Configuration options:\n"
-            "\t -p --Set OpenFoam case path.\n"
-            "\t -P --Display actual path for blockMeshDict.\n"
-            "\t -g --Shows airfoil plot with Gnuplot.\n"
-         "Mesh generation options:\n"
-            "\t -N --Naca 4 digits series airfoils.\n"
-         "Advanced options (beta):\n"
-            "\t -S --Airfoil shape optimization.\n"
-         "Postprocessing options:\n"
-            "\t -c --Choose OpenFOAM solver (not implemented).\n"
-            "\t -C --Generate OpenFOAM case on specified path.\n"
-            "\t -r --Run case with OpenFOAM solver.\n"
-            "\t -m --Build mesh, check and refine..\n");
+          "\n\tBasic options:\n"
+          "\t_________________________________________________________________\n"
+            "\t\t -h --help Display this usage information.\n" 
+            "\t\t -o --output filename Write output to file.\n"
+         "\n\tConfiguration options:\n"
+         "\t_________________________________________________________________\n"
+            "\t\t -g --Shows airfoil plot with Gnuplot.\n"
+         "\n\tMesh generation options:\n"
+            "\t\t -N --Naca 4 digits series airfoils.\n"
+         "\n\tAdvanced options (beta):\n"
+         "\t_________________________________________________________________\n"
+            "\t\t -S --Airfoil shape optimization.\n"
+            "\t\t      (Not implemented in this version of cmesfoil).\n"
+            "\t\t      See documentation for futher information and\n"
+            "\t\t      development status.\n"
+         "\n\tPostprocessing options:\n"
+         "\t_________________________________________________________________\n"
+            "\t\t -c --Choose OpenFOAM solver (not implemented).\n"
+            "\t\t      (Not implemented in this version of cmesfoil).\n"
+            "\t\t      See documentation for futher information and\n"
+            "\t\t      development status.\n"
+            "\t\t -m --Build mesh, check and refine.\n"
+            "\t\t -V --View the mesh with paraView.\n\n\n");
   exit (exit_code); 
 }
+
 /* Main program entry point. ARGC contains number of argument list elements; ARGV is an array of pointers to them. */
 int main (int argc, char* argv[]) 
 {
-
-    //TODO vamos con las pruebas:
-    //char nombre[] = "Gema";
-    //char apellido[] = "Zaragoza";
-    //strcat(nombre,apellido);
-    //cout << "nombre: " << nombre << " apellido " << apellido << endl;
-    //
-
-            long size = 1000;
-            char *ptr;
-            char *buf;
-
-            if ( (buf = (char*)malloc(size*sizeof(char))) != NULL)
-            {
-                ptr = getcwd(buf, size*sizeof(char) );
-            }
-            cout << ptr << endl;
-
   int next_option;
   /* A string listing valid short options letters. */ 
-  const char* const short_options = "hp:Pgo:vNSm";
+  const char* const short_options = "hgo:NSmV";
   /* An array describing valid long options. */
   const struct option long_options[] = 
   {
         { "help"        , 0, NULL, 'h' }, 
-        { "pathset"     , 1, NULL, 'p' },
-        { "pathdisplay" , 0, NULL, 'P' },
         { "output"      , 1, NULL, 'o' }, 
-        { "verbose"     , 0, NULL, 'v' },
         { "graph"       , 0, NULL, 'g' },
         { "Naca4"       , 0, NULL, 'N' },
         { "ShapeOpt"    , 0, NULL, 'S' },
         { "Mesh"        , 0, NULL, 'm' },
+        { "View"        , 0, NULL, 'V' },
         { NULL          , 0, NULL,  0  } /* Required at end of array. */ 
   };
-/* The name of the file to receive program output, or NULL for standard output. */
-const char* output_filename = NULL;
-/* Whether to display verbose messages. */ 
-int verbose = 0;
+
+  const char* output_filename = NULL;
 program_name = "CMeshFoil"; //Program name
 bool plotOption;            //Plot option
 
@@ -137,6 +90,7 @@ do {
     case 'h': /* -h or --help */
               /* User has requested usage information. Print it to standard output, and exit with exit code zero (normal termination). */
       print_usage (stdout, 0);
+
     case 'p':
       {
           printf("Please write the OpenFOAM case complete path (p.e: /home/user/case/): \n");
@@ -151,31 +105,26 @@ do {
       }
       break;
     case 'o': /* -o or --output */
-/* This option takes an argument, the name of the output file. */ 
       output_filename = optarg;
       break;
-    case 'v': /* -v or --verbose */ 
-      verbose = 1;
-      break;
 
-    //================================================================ MESH GENERATION OPTIONS =======//
-    case 'g':
+    /*::::::::::::::::::::::::::::: MESH GENERATION OPTIONS ::::::::::::::::::::::::::::::::::*/
+    case 'g': /* -g or --graph */
       {
           plotOption = true;
       }
       break;
 
-    case 'N'://NACA 4 series
+    case 'N': /* -N or --Naca4 */
       {
 
         float m,p,t;
-        cout << "\tMaximum camber (m) value?             "; cin >> m;
-        cout << "\tPosition of maximum camber (p) value? "; cin >> p;
-        cout << "\tMaximum thickness value (t) value?    "; cin >> t;
+        printf ("\tInfo: please give naca 4 series parameters to the code.\n");
+        cout << "\t     Maximum camber (m) value?             "; cin >> m;
+        cout << "\t     Position of maximum camber (p) value? "; cin >> p;
+        cout << "\t     Maximum thickness value (t) value?    "; cin >> t;
 
-        // Create an structure witch contain all paremeters needed.
         naca4parameters parameters(1.0,m,p,t,0.0,0.0);
-        // Create airfoil
         naca4 airfoil(parameters);
         
         if(plotOption == true)
@@ -184,7 +133,7 @@ do {
         }
         
         airfoil.meshGen();
-        printf("BlockMeshDict has been created on default path.\n");
+        printf("BlockMeshDict has been created.\n");
       }
       break;
 
@@ -193,12 +142,14 @@ do {
               code one (indicating abnormal termination). */ 
       print_usage (stderr, 1);
 
-    case 'S':
+    case 'S': /* -S or --ShapeOpt */
       {
-          float m,p,t;
-         cout << "\tMaximum camber (m) value?             "; cin >> m;
-         cout << "\tPosition of maximum camber (p) value? "; cin >> p;
-         cout << "\tMaximum thickness value (t) value?    "; cin >> t;
+        /* Naca 4 series airfoil variables */  
+        float m,p,t;
+        printf ("\tInfo: please give naca 4 series parameters to the code.\n");
+        cout << "\t      Maximum camber (m) value?             "; cin >> m;
+        cout << "\t      Position of maximum camber (p) value? "; cin >> p;
+        cout << "\t      Maximum thickness value (t) value?    "; cin >> t;
 
          naca4parameters parameters(1.0,m,p,t,0.0,0.0);
          splineShape airfoilShape(parameters);
@@ -220,15 +171,21 @@ do {
           // Build mesh with blockMesh command and check
           // and refine with checkMesh and refineMesh.
         printf("\tInfo: 1.-Creating a new case structure, just for meshing.\n");
-        system("sh /opt/cmeshfoil/scripts/setOFcase.sh");
-        printf("\tInfo: 2.-Moving blockMeshDict file to caseOF/constant/polyMesh\n");
-        system("cp blockMeshDict caseOF/constant/polyMesh && rm blockMeshDict");
+        printf("\tInfo: 2.-Creating blockMeshDict file to caseOF/constant/polyMesh\n");
         printf("\tInfo: 3.-Running blockMesh and checkMesh commands on caseOF/constant/polyMesh\n");
-        system("cd caseOF/ && blockMesh && checkMesh > checkMeshLog.txt && paraFoam"); //refineMesh is optional
-        printf("\tInfo: 4.-Done. You can see checkMeshLog.txt on caseOF.\n");
+        system("cd caseOF/ && blockMesh && checkMesh"); //refineMesh is optional
+        printf("\tInfo: 4.-Done. Now you can copy caseOF/constant/polyMesh files into your case directory.\n");
         system("cd ..");
       }
       break;
+
+    case 'V':
+    {
+      printf("\tInfo: Opening mesh with paraView\n");
+      system("cd caseOF && paraFoam");
+      system("cd ..");
+    }
+    break;
     
     case -1: 
       break;
@@ -240,12 +197,6 @@ do {
 while (next_option != -1);
 /* Done with options. OPTIND points to first nonoption argument. For demonstration purposes, print them if the verbose option was specified. */
 
-if (verbose) 
-{ 
-  int i;
-  for (i = optind; i < argc; ++i) printf ("Argument: %s\n", argv[i]);
-}
-/* The main program goes here. */
 return 0;
 
 }

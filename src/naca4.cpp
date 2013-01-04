@@ -24,7 +24,9 @@ naca4::naca4 (naca4parameters parameters) : data()
 
     printf("Airfoil info: m = %f, p = %f, t = %f, c=%f\n", m,p,t,c);
     CreateCoordinates();
+    printf("coordenadas creadas\n");
     exportCoordinates();
+    printf("coordenadas exportadas\n");
 }
 
 void naca4::CreateCoordinates()
@@ -150,7 +152,10 @@ void naca4::meshGen()
     //int output = system("rm -r /home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/*");//para hacer las cosas un poco mas rapido
     //out = fopen("/home/samuel/workSpace/shapeMorphing/OFcase/constant/polyMesh/blockMeshDict","w");//creo el fichero en mi ruta
     
-    out = fopen("blockMeshDict","w");
+    // First we have to create the case if doesn't exist.
+    system("sh /opt/cmeshfoil/scripts/setOFcase.sh");
+    // fist we need to change dir to actual path
+    out = fopen(BlockMeshDictPath(),"w");
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
     fprintf(out, "| =========                 |                                                 | \n");
@@ -384,7 +389,8 @@ void naca4::meshGen2()
 
     //Generamos el fichero blockMeshDict
     FILE *out;
-    out = fopen("blockMeshDict","w");
+    out = fopen("/home/samuel/Escritorio/blockMeshDict","w");
+    printf("Fichero creado blockMesh creado!\n");
 
     fprintf(out, "/*--------------------------------*- C++ -*----------------------------------*\\ \n");
     fprintf(out, "| =========                 |                                                 | \n");
@@ -566,7 +572,7 @@ void naca4::meshGen2()
 void naca4::exportCoordinates()
 {
     FILE *out;
-    out = fopen("output/coordinates.dat","w");
+    out = fopen("/home/samuel/Escritorio/coordinates.dat","w");
     for (int i = 0; i < Ni; ++i)
     {
         fprintf(out, "%f %f %f %f\n", xu[i],zu[i],xl[i],zl[i]);
