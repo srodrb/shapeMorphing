@@ -89,10 +89,21 @@ int main (int argc, char* argv[])
 {
 
     //TODO vamos con las pruebas:
-    char nombre[] = "Gema";
-    char apellido[] = "Zaragoza";
-    strcat(nombre,apellido);
-    cout << "nombre: " << nombre << " apellido " << apellido << endl;
+    //char nombre[] = "Gema";
+    //char apellido[] = "Zaragoza";
+    //strcat(nombre,apellido);
+    //cout << "nombre: " << nombre << " apellido " << apellido << endl;
+    //
+
+            long size = 1000;
+            char *ptr;
+            char *buf;
+
+            if ( (buf = (char*)malloc(size*sizeof(char))) != NULL)
+            {
+                ptr = getcwd(buf, size*sizeof(char) );
+            }
+            cout << ptr << endl;
 
   int next_option;
   /* A string listing valid short options letters. */ 
@@ -208,7 +219,14 @@ do {
       {
           // Build mesh with blockMesh command and check
           // and refine with checkMesh and refineMesh.
-        int order = system ("blockMesh && checkMesh && paraFoam"); //refineMesh is optional
+        printf("\tInfo: 1.-Creating a new case structure, just for meshing.\n");
+        system("sh /opt/cmeshfoil/scripts/setOFcase.sh");
+        printf("\tInfo: 2.-Moving blockMeshDict file to caseOF/constant/polyMesh\n");
+        system("cp blockMeshDict caseOF/constant/polyMesh && rm blockMeshDict");
+        printf("\tInfo: 3.-Running blockMesh and checkMesh commands on caseOF/constant/polyMesh\n");
+        system("cd caseOF/ && blockMesh && checkMesh > checkMeshLog.txt && paraFoam"); //refineMesh is optional
+        printf("\tInfo: 4.-Done. You can see checkMeshLog.txt on caseOF.\n");
+        system("cd ..");
       }
       break;
     

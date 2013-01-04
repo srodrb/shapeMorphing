@@ -20,8 +20,15 @@ clean:
 	@echo '**All clean!'
 
 install:
+	@echo '**Removing previous installation...'
+	rm /usr/bin/$(APPNAME)
+	rm -r /opt/$(APPNAME)
 	@echo '**Installing...'
-	-cp $(APPNAME) /usr/bin
+	cp $(APPNAME) /usr/bin
+	@echo '**Creating /opt/$(APPNAME) directory...'
+	mkdir /opt/$(APPNAME)
+	cd ..
+	cp -r * /opt/$(APPNAME)
 	@echo '**Done!'
 
 $(APPNAME): main.cpp common.o data.o parameterStructs.o meshGen.o splineShape.o naca4.o
