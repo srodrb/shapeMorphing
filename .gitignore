@@ -3,3 +3,6 @@ tags
 cscope*
 blocMesh*
 cmeshfoil
+airfoilCase
+caseOF
+.gitignore

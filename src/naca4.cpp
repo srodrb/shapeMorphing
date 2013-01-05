@@ -101,18 +101,18 @@ void naca4::meshGen()
     const float W = 0.5;
     const float D = 16.0;
     //____Mesh density control parameters______//
-    const int Nx = 150;
-    const int ND = 30;
-    const int NT = 200;
+    const int Nx = 80;//150
+    const int ND = 40;// Numero de divisiones aguas abajo del tunel
+    const int NT = 60;// Numero de divisiones en la direccion transversa (y)
     const int NW = 1;
     //____Mesh expansion ratios________________//
-    const float ExpT = 5;
-    const float ExpD = 15;
-    const float ExpA = 5;
+    const float ExpT = 60.0;
+    const float ExpD = 10.0;
+    const float ExpA = 5.0;
     scale = 1.0; 
     //:::::::::::::::::::::::::::::::::::::::://
     int Nleading = 40;        //divisiones hacia el borde de entrada
-    int Ntrailing = 70;       //divisiones hacia el borde de salida
+    int Ntrailing = 50;       //divisiones hacia el borde de salida
     q = 35;                   //cuanto menor sea mas cerca estoy del borde de entrada (leading)
 
     float NoseX =  (-H+xu[q])*cos(alpha); //cout << "NoseX value: " << NoseX << endl;
@@ -188,7 +188,7 @@ void naca4::meshGen()
     fprintf(out, "blocks \n");
     fprintf(out, "( \n");
     fprintf(out, "    hex (4 5 1 0 16 17 13 12)     (%d %d %d) edgeGrading (1 %f %f 1 %f %f %f %f 1 1 1 1) \n", Nleading, NT, NW, 1.0/ExpA, 1.0/ExpA, ExpT, ExpT, ExpT, ExpT);
-    fprintf(out, "    hex (5 7 2 1 17 19 14 13)     (%d %d %d) simpleGrading (1 %f 1) \n", Ntrailing, NT, NW, ExpT);
+    fprintf(out, "    hex (5 7 2 1 17 19 14 13)     (%d %d %d) simpleGrading (1 %f 1) \n", Ntrailing, NT, NW, ExpT);//el segundo es expt
     fprintf(out, "    hex (7 8 3 2 19 20 15 14)     (%d %d %d) simpleGrading (%f %f 1) \n", ND, NT, NW, ExpD, ExpT);
     fprintf(out, "    hex (16 18 21 12 4 6 9 0)     (%d %d %d) edgeGrading (1 %f %f 1 %f %f %f %f 1 1 1 1) \n", Nleading, NT, NW, 1.0/ExpA, 1.0/ExpA, ExpT, ExpT, ExpT, ExpT);
     fprintf(out, "    hex (18 19 22 21 6 7 10 9)    (%d %d %d) simpleGrading (1 %f 1) \n", Ntrailing, NT, NW, ExpT);
