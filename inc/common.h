@@ -22,8 +22,6 @@ using namespace std;
 
 
 char* readPath();
-void changeToActualDir();     // It changes path to actual dir with system "command"
-char* BlockMeshDictPath();
-
+char* setPath(const char* route,const char* filename);
 
 #endif 

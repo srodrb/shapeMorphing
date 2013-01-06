@@ -1,1 +1,0 @@
-These are openFOAM dicts witch are needed to run blockMesh and checkMesh commands, don't delete!

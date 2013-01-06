@@ -80,7 +80,7 @@ int main (int argc, char* argv[])
 
   const char* output_filename = NULL;
 program_name = "CMeshFoil"; //Program name
-bool plotOption;            //Plot option
+bool plotOption = false;            //Plot option
 
 do {
   next_option = getopt_long (argc, argv, short_options,
@@ -134,6 +134,8 @@ do {
         
         airfoil.meshGen();
         printf("BlockMeshDict has been created.\n");
+        airfoil.sampleDictGen();
+        printf("sampleDict file has been created\n");
       }
       break;
 
@@ -176,6 +178,7 @@ do {
         system("cd caseOF/ && blockMesh && checkMesh"); //refineMesh is optional
         printf("\tInfo: 4.-Done. Now you can copy caseOF/constant/polyMesh files into your case directory.\n");
         system("cd ..");
+        system("sh /opt/cmeshfoil/scripts/setIcoFoam.sh");
       }
       break;
 

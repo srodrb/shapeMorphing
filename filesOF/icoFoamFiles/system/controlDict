@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         500;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   50;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+
+//mi parte de codigo para sacar algunas cosas...
+functions
+{
+    #include "forceCoeffs"
+}
+
+/*
+//Estas funciones son necesarias para el plano de corte
+functions
+{
+
+
+    cuttingPlane
+    {
+        type            surfaces;
+        functionObjectLibs ( "libsampling.so" );
+        outputControl   outputTime;
+        surfaceFormat   raw;
+        fields          ( p );
+        interpolationScheme cellPoint;
+        surfaces        ( zNormal { type cuttingPlane ; planeType pointAndNormal ; pointAndNormalDict { basePoint ( 0 0 0 ) ; normalVector ( 0 0 1 ) ; } interpolate true ; } );
+    }
+
+}
+
+*/
+
+
+// ************************************************************************* //

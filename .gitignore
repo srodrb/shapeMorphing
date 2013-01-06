@@ -3,6 +3,7 @@ tags
 cscope*
 blocMesh*
 cmeshfoil
-airfoilCase
-caseOF
+airfoilCase/
+caseOF/
 .gitignore
+TODO.txt
