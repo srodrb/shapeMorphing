@@ -103,10 +103,10 @@ void naca4::meshGen()
     //____Mesh density control parameters______//
     const int Nx = 80;//150
     const int ND = 40;// Numero de divisiones aguas abajo del tunel
-    const int NT = 60;// Numero de divisiones en la direccion transversa (y)
+    const int NT = 70;// Numero de divisiones en la direccion transversa (y)
     const int NW = 1;
     //____Mesh expansion ratios________________//
-    const float ExpT = 60.0;
+    const float ExpT = 80.0;
     const float ExpD = 10.0;
     const float ExpA = 5.0;
     scale = 1.0; 

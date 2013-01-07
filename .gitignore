@@ -4,6 +4,7 @@ cscope*
 blocMesh*
 cmeshfoil
 airfoilCase/
+simpleFoamAirfoil/
 caseOF/
 .gitignore
 TODO.txt
